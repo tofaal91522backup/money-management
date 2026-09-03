@@ -1,0 +1,237 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum AccountType {
+  CASH
+  BANK
+  MOBILE_WALLET
+  SAVINGS
+  OTHER
+}
+
+enum CategoryType {
+  INCOME
+  EXPENSE
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+  TRANSFER
+  ADJUSTMENT
+  LOAN_DISBURSEMENT
+  LOAN_REPAYMENT
+}
+
+enum LoanType {
+  RECEIVABLE
+  PAYABLE
+}
+
+enum LoanStatus {
+  ACTIVE
+  PARTIALLY_PAID
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+enum BudgetScope {
+  TOTAL
+  CATEGORY
+}
+
+enum ThemePreference {
+  SYSTEM
+  LIGHT
+  DARK
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String?
+  passwordHash String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  accounts     Account[]
+  budgets      Budget[]
+  categories   Category[]
+  loans        Loan[]
+  repayments   LoanRepayment[]
+  sessions     Session[]
+  settings     UserSettings?
+  transactions Transaction[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  userId    String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model UserSettings {
+  id                   String          @id @default(cuid())
+  currency             String          @default("BDT")
+  locale               String          @default("en-BD")
+  theme                ThemePreference @default(SYSTEM)
+  hideBalances         Boolean         @default(false)
+  defaultAccountId     String?
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+  userId               String          @unique
+
+  defaultAccount Account? @relation("DefaultAccount", fields: [defaultAccountId], references: [id], onDelete: SetNull)
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([defaultAccountId])
+}
+
+model Account {
+  id             String      @id @default(cuid())
+  name           String
+  type           AccountType
+  openingBalance Int         @default(0)
+  identifier     String?
+  icon           String?
+  color          String?
+  isArchived     Boolean     @default(false)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  userId         String
+
+  defaultForSettings UserSettings[]    @relation("DefaultAccount")
+  incomingTransactions Transaction[]   @relation("DestinationAccount")
+  loanOriginations     Loan[]          @relation("LoanOriginAccount")
+  repayments           LoanRepayment[] @relation("RepaymentAccount")
+  outgoingTransactions Transaction[]   @relation("SourceAccount")
+  user                 User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, name])
+  @@index([userId, isArchived])
+}
+
+model Category {
+  id        String       @id @default(cuid())
+  name      String
+  type      CategoryType
+  icon      String?
+  color     String?
+  isDefault Boolean      @default(false)
+  isArchived Boolean    @default(false)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  userId    String
+
+  budgets      Budget[]      @relation("BudgetCategory")
+  transactions Transaction[]
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, type, name])
+  @@index([userId, type, isArchived])
+}
+
+model Transaction {
+  id                   String          @id @default(cuid())
+  type                 TransactionType
+  amount               Int
+  feeAmount            Int             @default(0)
+  date                 DateTime
+  note                 String?
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+  userId               String
+  categoryId           String?
+  sourceAccountId      String?
+  destinationAccountId String?
+  loanId               String?
+  repaymentId          String?         @unique
+
+  category           Category?      @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  destinationAccount Account?       @relation("DestinationAccount", fields: [destinationAccountId], references: [id], onDelete: Restrict)
+  loan               Loan?          @relation(fields: [loanId], references: [id], onDelete: Restrict)
+  repayment          LoanRepayment? @relation("RepaymentTransaction", fields: [repaymentId], references: [id], onDelete: SetNull)
+  sourceAccount      Account?       @relation("SourceAccount", fields: [sourceAccountId], references: [id], onDelete: Restrict)
+  user               User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, date])
+  @@index([userId, type, date])
+  @@index([sourceAccountId, date])
+  @@index([destinationAccountId, date])
+  @@index([categoryId, date])
+  @@index([loanId, date])
+}
+
+model Loan {
+  id              String     @id @default(cuid())
+  personName      String
+  personContact   String?
+  type            LoanType
+  originalAmount  Int
+  startDate       DateTime
+  dueDate         DateTime?
+  note            String?
+  status          LoanStatus @default(ACTIVE)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  userId          String
+  originAccountId String
+
+  originAccount Account         @relation("LoanOriginAccount", fields: [originAccountId], references: [id], onDelete: Restrict)
+  repayments    LoanRepayment[]
+  transactions  Transaction[]
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, type, status])
+  @@index([userId, dueDate])
+}
+
+model LoanRepayment {
+  id            String   @id @default(cuid())
+  amount        Int
+  date          DateTime
+  note          String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  userId        String
+  loanId        String
+  accountId     String
+
+  account     Account      @relation("RepaymentAccount", fields: [accountId], references: [id], onDelete: Restrict)
+  loan        Loan         @relation(fields: [loanId], references: [id], onDelete: Cascade)
+  transaction Transaction? @relation("RepaymentTransaction")
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, loanId, date])
+}
+
+model Budget {
+  id         String      @id @default(cuid())
+  scope      BudgetScope
+  amount     Int
+  month      DateTime
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  userId     String
+  categoryId String?
+
+  category Category? @relation("BudgetCategory", fields: [categoryId], references: [id], onDelete: Restrict)
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, month])
+  @@index([userId, categoryId, month])
+}
