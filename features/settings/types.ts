@@ -22,3 +22,19 @@ export type ResetDataFormState = {
 }
 
 export const settingsQueryKey = ["settings"] as const
+
+export type ImportSummary = {
+  accounts: number
+  categories: number
+  loans: number
+  repayments: number
+  transactions: number
+  budgets: number
+}
+
+export type ImportDataFormState = {
+  error?: string
+  summary?: ImportSummary
+}
+
+export const exportDataPath = "/api/settings/export"

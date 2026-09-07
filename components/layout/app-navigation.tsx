@@ -8,6 +8,7 @@ import {
   Landmark,
   LayoutDashboard,
   Menu,
+  MoreHorizontal,
   ReceiptText,
   Settings,
   Tags,
@@ -32,6 +33,9 @@ const icons: Record<NavigationIcon, typeof LayoutDashboard> = {
   WalletCards,
 }
 
+const primaryTabs = mainNavigation.slice(0, 4)
+const overflowItems: readonly NavigationItem[] = [...mainNavigation.slice(4), ...utilityNavigation]
+
 type NavigationLinksProps = {
   compact?: boolean
   onNavigate?: () => void
@@ -51,7 +55,7 @@ function NavigationLink({ item, compact, onNavigate }: { item: NavigationItem; c
       href={item.href}
       onClick={onNavigate}
       className={cn(
-        "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+        "flex min-w-0 items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
         isActive
           ? "bg-primary text-primary-foreground shadow-sm"
           : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
@@ -61,7 +65,7 @@ function NavigationLink({ item, compact, onNavigate }: { item: NavigationItem; c
       title={compact ? item.label : undefined}
     >
       <Icon className="size-4 shrink-0" aria-hidden="true" />
-      {!compact && <span>{item.label}</span>}
+      {!compact && <span className="truncate">{item.label}</span>}
     </Link>
   )
 }
@@ -98,21 +102,59 @@ export function MobileNavigation() {
 
 export function MobileBottomNavigation() {
   const pathname = usePathname()
-  const items = mainNavigation.slice(0, 5)
+  const [moreOpen, setMoreOpen] = useState(false)
+  const isOverflowActive = overflowItems.some((item) => isActiveRoute(pathname, item.href))
 
   return (
-    <nav aria-label="Mobile navigation" className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t bg-background/95 px-1 py-2 backdrop-blur md:hidden">
-      {items.map((item) => {
+    <nav
+      aria-label="Mobile navigation"
+      className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t bg-background/95 px-1 pt-1 pb-[max(0.25rem,env(safe-area-inset-bottom))] backdrop-blur supports-[backdrop-filter]:bg-background/80 md:hidden"
+    >
+      {primaryTabs.map((item) => {
         const Icon = icons[item.icon]
         const isActive = isActiveRoute(pathname, item.href)
 
         return (
-          <Link key={item.href} href={item.href} className={cn("flex flex-col items-center gap-1 rounded-md py-1 text-[10px] font-medium", isActive ? "text-primary" : "text-muted-foreground")} aria-current={isActive ? "page" : undefined}>
-            <Icon className="size-4" aria-hidden="true" />
-            <span>{item.label}</span>
+          <Link
+            key={item.href}
+            href={item.href}
+            className={cn(
+              "flex min-h-12 min-w-0 flex-col items-center justify-center gap-1 rounded-md px-0.5 py-1.5 text-[10px] leading-tight font-medium",
+              isActive ? "text-primary" : "text-muted-foreground",
+            )}
+            aria-current={isActive ? "page" : undefined}
+          >
+            <Icon className="size-5 shrink-0" aria-hidden="true" />
+            <span className="w-full truncate text-center">{item.label}</span>
           </Link>
         )
       })}
+
+      <Sheet open={moreOpen} onOpenChange={setMoreOpen}>
+        <SheetTrigger asChild>
+          <button
+            type="button"
+            className={cn(
+              "flex min-h-12 min-w-0 flex-col items-center justify-center gap-1 rounded-md px-0.5 py-1.5 text-[10px] leading-tight font-medium",
+              isOverflowActive ? "text-primary" : "text-muted-foreground",
+            )}
+            aria-label="More sections"
+          >
+            <MoreHorizontal className="size-5 shrink-0" aria-hidden="true" />
+            <span className="w-full truncate text-center">More</span>
+          </button>
+        </SheetTrigger>
+        <SheetContent side="bottom" className="rounded-t-2xl">
+          <SheetHeader>
+            <SheetTitle>All sections</SheetTitle>
+          </SheetHeader>
+          <div className="grid gap-1">
+            {[...mainNavigation, ...utilityNavigation].map((item) => (
+              <NavigationLink key={item.href} item={item} onNavigate={() => setMoreOpen(false)} />
+            ))}
+          </div>
+        </SheetContent>
+      </Sheet>
     </nav>
   )
 }

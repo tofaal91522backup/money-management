@@ -31,20 +31,20 @@ export function AppShell({ children, user }: AppShellProps) {
         </div>
       </aside>
 
-      <div className="min-w-0 pb-20 md:pb-0">
+      <div className="min-w-0 pb-[calc(4.5rem+env(safe-area-inset-bottom))] md:pb-0">
         <header className="sticky top-0 z-30 border-b bg-background/90 backdrop-blur">
-          <PageContainer className="flex h-16 max-w-none items-center justify-between">
-            <div className="flex items-center gap-3">
+          <PageContainer className="flex h-16 max-w-none items-center justify-between gap-3">
+            <div className="flex min-w-0 items-center gap-3">
               <div className="md:hidden"><MobileNavigation /></div>
-              <div>
-                <p className="text-sm font-semibold tracking-tight">Your money, at a glance</p>
-                <p className="hidden text-xs text-muted-foreground sm:block">Keep every account and payment in view.</p>
+              <div className="min-w-0">
+                <p className="truncate text-sm font-semibold tracking-tight">Your money, at a glance</p>
+                <p className="hidden truncate text-xs text-muted-foreground sm:block">Keep every account and payment in view.</p>
               </div>
             </div>
-            <UserMenu email={user.email} name={user.name} />
+            <div className="shrink-0"><UserMenu email={user.email} name={user.name} /></div>
           </PageContainer>
         </header>
-        <main id="main-content" tabIndex={-1}>{children}</main>
+        <main id="main-content" tabIndex={-1} className="min-w-0 overflow-x-clip">{children}</main>
       </div>
       <MobileBottomNavigation />
     </div>

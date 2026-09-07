@@ -38,12 +38,12 @@ export function AccountsScreen() {
   return (
     <div className="grid gap-6">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-        <div>
+        <div className="min-w-0">
           <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Accounts</h1>
           <p className="mt-1 text-sm text-muted-foreground">Keep cash, bank, and mobile wallet money separate and visible.</p>
         </div>
         <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-          <DialogTrigger asChild><Button><Plus className="size-4" /> Add account</Button></DialogTrigger>
+          <DialogTrigger asChild><Button className="w-full sm:w-auto"><Plus className="size-4" /> Add account</Button></DialogTrigger>
           <DialogContent>
             <DialogHeader><DialogTitle>Add an account</DialogTitle><DialogDescription>Start with the balance currently in this account.</DialogDescription></DialogHeader>
             <AccountForm onSuccess={() => setCreateOpen(false)} />
@@ -54,7 +54,7 @@ export function AccountsScreen() {
       <Card className="overflow-hidden bg-primary text-primary-foreground">
         <CardContent className="p-5 sm:p-6">
           <p className="text-sm font-medium text-primary-foreground/75">Total available balance</p>
-          <p className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">{formatMoney(totalBalance)}</p>
+          <p className="mt-2 text-3xl font-semibold tracking-tight break-words tabular-nums sm:text-4xl">{formatMoney(totalBalance)}</p>
           <p className="mt-2 text-sm text-primary-foreground/75">Across {activeAccounts.length} active {activeAccounts.length === 1 ? "account" : "accounts"}</p>
         </CardContent>
       </Card>
@@ -90,12 +90,12 @@ function AccountCard({ account, onEdit, onToggleArchive }: { account: AccountSum
     <Card className={account.isArchived ? "opacity-70" : undefined}>
       <CardContent className="p-5">
         <div className="flex items-start justify-between gap-3">
-          <div className="flex min-w-0 items-center gap-3"><span className="grid size-10 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary"><Icon className="size-5" /></span><div className="min-w-0"><p className="truncate font-semibold">{account.name}</p><p className="mt-0.5 text-xs text-muted-foreground">{accountTypeLabels[account.type]}</p></div></div>
-          {account.isArchived && <Badge variant="secondary">Archived</Badge>}
+          <div className="flex min-w-0 items-center gap-3"><span className="grid size-10 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary"><Icon className="size-5" /></span><div className="min-w-0"><p className="truncate font-semibold">{account.name}</p><p className="mt-0.5 truncate text-xs text-muted-foreground">{accountTypeLabels[account.type]}</p></div></div>
+          {account.isArchived && <Badge className="shrink-0" variant="secondary">Archived</Badge>}
         </div>
-        <p className="mt-6 text-2xl font-semibold tracking-tight">{formatMoney(account.balance)}</p>
-        <p className="mt-1 truncate text-xs text-muted-foreground">{account.identifier ?? "No account note added"}</p>
-        <div className="mt-5 flex items-center gap-2 border-t pt-4"><Button variant="ghost" size="sm" onClick={onEdit}><Pencil className="size-3.5" /> Edit</Button><form action={onToggleArchive}><input type="hidden" name="accountId" value={account.id} /><input type="hidden" name="archive" value={String(!account.isArchived)} /><Button variant="ghost" size="sm" type="submit"><Archive className="size-3.5" /> {account.isArchived ? "Restore" : "Archive"}</Button></form></div>
+        <p className="mt-6 text-2xl font-semibold tracking-tight break-words tabular-nums">{formatMoney(account.balance)}</p>
+        <p className="mt-1 line-clamp-2 text-xs break-words text-muted-foreground">{account.identifier ?? "No account note added"}</p>
+        <div className="mt-5 flex flex-wrap items-center gap-2 border-t pt-4"><Button variant="ghost" size="sm" onClick={onEdit}><Pencil className="size-3.5" /> Edit</Button><form action={onToggleArchive}><input type="hidden" name="accountId" value={account.id} /><input type="hidden" name="archive" value={String(!account.isArchived)} /><Button variant="ghost" size="sm" type="submit"><Archive className="size-3.5" /> {account.isArchived ? "Restore" : "Archive"}</Button></form></div>
       </CardContent>
     </Card>
   )

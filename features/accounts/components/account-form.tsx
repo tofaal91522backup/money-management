@@ -45,18 +45,18 @@ export function AccountForm({ account, onSuccess }: AccountFormProps) {
         <label htmlFor="account-name" className="text-sm font-medium">Account name</label>
         <Input id="account-name" name="name" defaultValue={account?.name} placeholder="e.g. City Bank" required maxLength={40} />
       </div>
-      <div className="grid gap-2 sm:grid-cols-2">
-        <label className="grid gap-2 text-sm font-medium">Account type
-          <select name="type" defaultValue={account?.type ?? "CASH"} className="h-10 rounded-lg border bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/25">
+      <div className="grid gap-4 sm:grid-cols-2">
+        <label className="grid min-w-0 gap-2 text-sm font-medium">Account type
+          <select name="type" defaultValue={account?.type ?? "CASH"} className="h-10 w-full min-w-0 rounded-lg border bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/25">
             {accountTypes.map((type) => <option key={type} value={type}>{accountTypeLabels[type]}</option>)}
           </select>
         </label>
-        <label className="grid gap-2 text-sm font-medium">Opening balance
+        <label className="grid min-w-0 gap-2 text-sm font-medium">Opening balance
           <Input name="openingBalance" type="text" inputMode="decimal" defaultValue={account ? String(account.openingBalance / 100) : "0"} placeholder="0.00" required />
         </label>
       </div>
       <div className="grid gap-2">
-        <label htmlFor="account-identifier" className="inline-flex items-baseline gap-1 text-sm font-medium">Account number or note <span className="whitespace-nowrap font-normal text-muted-foreground">(optional)</span></label>
+        <label htmlFor="account-identifier" className="flex flex-wrap items-baseline gap-1 text-sm font-medium">Account number or note <span className="whitespace-nowrap font-normal text-muted-foreground">(optional)</span></label>
         <Input id="account-identifier" name="identifier" defaultValue={account?.identifier ?? ""} placeholder="Last four digits or a short note" maxLength={80} />
       </div>
       <div className="grid gap-2">

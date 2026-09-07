@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
   const previousStart = new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth() - 1, 1))
 
   const [current, previous, topExpenses, accounts, loans] = await Promise.all([
-    prisma.transaction.findMany({ where: { userId: user.id, date: { gte: start, lt: end }, type: { in: ["INCOME", "EXPENSE", "TRANSFER"] } }, select: { type: true, amount: true, categoryId: true, sourceAccountId: true, destinationAccountId: true, category: { select: { name: true } } } }),
+    prisma.transaction.findMany({ where: { userId: user.id, date: { gte: start, lt: end }, type: { in: ["INCOME", "EXPENSE", "TRANSFER"] } }, select: { type: true, amount: true, date: true, categoryId: true, sourceAccountId: true, destinationAccountId: true, category: { select: { name: true } } } }),
     prisma.transaction.findMany({ where: { userId: user.id, date: { gte: previousStart, lt: start }, type: { in: ["INCOME", "EXPENSE"] } }, select: { type: true, amount: true } }),
     prisma.transaction.findMany({ where: { userId: user.id, date: { gte: start, lt: end }, type: "EXPENSE" }, orderBy: { amount: "desc" }, take: 5, select: { id: true, amount: true, date: true, category: { select: { name: true } }, sourceAccount: { select: { name: true } } } }),
     prisma.account.findMany({ where: { userId: user.id }, select: { id: true, name: true } }),
@@ -32,5 +32,14 @@ export async function GET(request: NextRequest) {
   const loanTotals = loans.reduce((totals, loan) => { const remaining = loan.originalAmount - loan.repayments.reduce((sum, repayment) => sum + repayment.amount, 0); if (loan.type === "RECEIVABLE") totals.receivable += remaining; else totals.payable += remaining; if (remaining > 0 && loan.dueDate && loan.dueDate < new Date()) totals.overdueCount += 1; return totals }, { receivable: 0, payable: 0, overdueCount: 0 })
   const incomeSources = groupCategory("INCOME")
 
-  return NextResponse.json({ month, income, expense, netCashFlow: income - expense, previousIncome: sumType(previous, "INCOME"), previousExpense: sumType(previous, "EXPENSE"), familySupport: incomeSources.filter((item) => item.name.toLowerCase().includes("family") || item.name.includes("বাবা")).reduce((sum, item) => sum + item.amount, 0), categoryExpenses: groupCategory("EXPENSE"), incomeSources, accountActivity, topExpenses: topExpenses.map((item) => ({ id: item.id, amount: item.amount, date: item.date, categoryName: item.category?.name ?? "Other", accountName: item.sourceAccount?.name ?? "Unknown account" })), loans: loanTotals })
+  const daysInMonth = new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth() + 1, 0)).getUTCDate()
+  const expenseByDay = current.reduce((map, item) => { if (item.type !== "EXPENSE") return map; const key = item.date.toISOString().slice(0, 10); return map.set(key, (map.get(key) ?? 0) + item.amount) }, new Map<string, number>())
+  const dailyExpenses = Array.from({ length: daysInMonth }, (_, index) => { const date = `${month}-${String(index + 1).padStart(2, "0")}`; return { date, amount: expenseByDay.get(date) ?? 0 } })
+  // An ongoing month should average over the days that have actually happened.
+  const today = new Date()
+  const currentMonth = today.toISOString().slice(0, 7)
+  const daysCounted = month > currentMonth ? 0 : month === currentMonth ? Math.min(today.getUTCDate(), daysInMonth) : daysInMonth
+  const averageDailyExpense = daysCounted ? Math.round(expense / daysCounted) : 0
+
+  return NextResponse.json({ month, income, expense, netCashFlow: income - expense, previousIncome: sumType(previous, "INCOME"), previousExpense: sumType(previous, "EXPENSE"), familySupport: incomeSources.filter((item) => item.name.toLowerCase().includes("family") || item.name.includes("বাবা")).reduce((sum, item) => sum + item.amount, 0), categoryExpenses: groupCategory("EXPENSE"), incomeSources, accountActivity, dailyExpenses, daysCounted, averageDailyExpense, topExpenses: topExpenses.map((item) => ({ id: item.id, amount: item.amount, date: item.date, categoryName: item.category?.name ?? "Other", accountName: item.sourceAccount?.name ?? "Unknown account" })), loans: loanTotals })
 }

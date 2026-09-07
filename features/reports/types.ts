@@ -9,6 +9,9 @@ export type ReportData = {
   categoryExpenses: Array<{ name: string; amount: number }>
   incomeSources: Array<{ name: string; amount: number }>
   accountActivity: Array<{ name: string; income: number; expense: number; transfers: number }>
+  dailyExpenses: Array<{ date: string; amount: number }>
+  daysCounted: number
+  averageDailyExpense: number
   topExpenses: Array<{ id: string; amount: number; date: string; categoryName: string; accountName: string }>
   loans: { receivable: number; payable: number; overdueCount: number }
 }

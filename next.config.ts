@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  experimental: {
+    // Data imports upload a whole CSV backup through a server action.
+    serverActions: { bodySizeLimit: "50mb" },
+  },
 };
 
 export default nextConfig;

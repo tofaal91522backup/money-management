@@ -2,11 +2,12 @@
 
 import { revalidatePath } from "next/cache"
 
+import { BackupFormatError, importUserDataCsv } from "@/lib/backup/user-data"
 import { requireUser } from "@/lib/auth/session"
 import { verifyPassword } from "@/lib/auth/password"
 import { prisma } from "@/lib/db/prisma"
 import { defaultCategories } from "@/prisma/default-categories"
-import type { ResetDataFormState, SettingsFormState, ThemePreference } from "@/features/settings/types"
+import type { ImportDataFormState, ResetDataFormState, SettingsFormState, ThemePreference } from "@/features/settings/types"
 
 const themes: ThemePreference[] = ["SYSTEM", "LIGHT", "DARK"]
 
@@ -70,4 +71,29 @@ export async function resetAllDataAction(_: ResetDataFormState, formData: FormDa
 
   revalidatePath("/", "layout")
   return { success: true }
+}
+
+const MAX_IMPORT_BYTES = 5 * 1024 * 1024
+
+export async function importDataAction(_: ImportDataFormState, formData: FormData): Promise<ImportDataFormState> {
+  const user = await requireUser()
+  const file = formData.get("file")
+  const password = String(formData.get("password") ?? "")
+
+  if (!(file instanceof File) || file.size === 0) return { error: "Choose the CSV file you want to import." }
+  if (file.size > MAX_IMPORT_BYTES) return { error: "That file is larger than 5 MB." }
+  if (!password) return { error: "Enter your password to confirm the import." }
+  if (!(await verifyPassword(password, user.passwordHash))) {
+    return { error: "The password is incorrect. Nothing was imported." }
+  }
+
+  try {
+    const summary = await importUserDataCsv(user.id, await file.text())
+    revalidatePath("/", "layout")
+    return { summary }
+  } catch (error) {
+    if (error instanceof BackupFormatError) return { error: error.message }
+    console.error("Data import failed", error)
+    return { error: "The import could not be completed, so your existing records were left unchanged." }
+  }
 }

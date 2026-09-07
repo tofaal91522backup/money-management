@@ -42,14 +42,14 @@ export function CategoryForm({ category, onSuccess }: CategoryFormProps) {
       {category && <input type="hidden" name="categoryId" value={category.id} />}
       {category?.isDefault && <input type="hidden" name="type" value={category.type} />}
       <div className="grid gap-2"><label htmlFor="category-name" className="text-sm font-medium">Category name</label><Input id="category-name" name="name" defaultValue={category?.name} placeholder="e.g. Transport" required maxLength={40} /></div>
-      <label className="grid gap-2 text-sm font-medium">Type
-        <select name={typeIsLocked ? undefined : "type"} disabled={typeIsLocked} defaultValue={category?.type ?? "EXPENSE"} className="h-10 rounded-lg border bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/25 disabled:cursor-not-allowed disabled:opacity-60">
+      <label className="grid min-w-0 gap-2 text-sm font-medium">Type
+        <select name={typeIsLocked ? undefined : "type"} disabled={typeIsLocked} defaultValue={category?.type ?? "EXPENSE"} className="h-10 w-full min-w-0 rounded-lg border bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/25 disabled:cursor-not-allowed disabled:opacity-60">
           {categoryTypes.map((type) => <option key={type} value={type}>{categoryTypeLabels[type]}</option>)}
         </select>
         {typeIsLocked && <span className="text-xs font-normal text-muted-foreground">Default category types stay fixed to keep reports consistent.</span>}
       </label>
-      <label className="grid gap-2 text-sm font-medium">Icon
-        <select name="icon" defaultValue={category?.icon ?? "CircleDot"} className="h-10 rounded-lg border bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/25">
+      <label className="grid min-w-0 gap-2 text-sm font-medium">Icon
+        <select name="icon" defaultValue={category?.icon ?? "CircleDot"} className="h-10 w-full min-w-0 rounded-lg border bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/25">
           {icons.map((icon) => <option key={icon} value={icon}>{icon}</option>)}
         </select>
       </label>
