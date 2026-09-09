@@ -1,11 +1,13 @@
 "use client"
 
-import { useActionState, useEffect, useState } from "react"
+import { useActionState, useEffect, useMemo, useState } from "react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { accountsQueryKey, getAccounts } from "@/features/accounts/api"
+import { categoriesQueryKey, getCategories } from "@/features/categories/api"
+import { formatMoney, parseMoneyInput } from "@/lib/money/currency"
 import { createLoanAction, createRepaymentAction, updateLoanAction } from "@/features/loans/actions"
 import { loansQueryKey, type LoanFormState, type LoanSummary, type LoanType } from "@/features/loans/types"
 import { refreshAppData } from "@/lib/query/refresh-app-data"
@@ -62,6 +64,17 @@ export function RepaymentForm({ loan, onSuccess }: { loan: LoanSummary; onSucces
   const queryClient = useQueryClient()
   const [state, formAction, pending] = useActionState(createRepaymentAction, initialState)
   const { data: accounts = [] } = useQuery({ queryKey: accountsQueryKey, queryFn: getAccounts })
+  const { data: categories = [] } = useQuery({ queryKey: categoriesQueryKey, queryFn: getCategories })
+  const [amountInput, setAmountInput] = useState("")
+
+  // Getting back more than you are owed is common (cash-out fee covered, or goodwill).
+  // Only the remaining amount settles the loan; the rest is saved as ordinary income.
+  const entered = parseMoneyInput(amountInput)
+  const applied = entered === null ? 0 : Math.min(entered, loan.remainingAmount)
+  const extra = entered === null ? 0 : entered - applied
+  const extraType = loan.type === "RECEIVABLE" ? "INCOME" : "EXPENSE"
+  const extraCategories = useMemo(() => categories.filter((category) => category.type === extraType && !category.isArchived), [categories, extraType])
+  const fallbackCategory = extraCategories.find((category) => category.name === (extraType === "INCOME" ? "Other income" : "Other expense"))
 
   useEffect(() => {
     if (state.success) {
@@ -73,11 +86,27 @@ export function RepaymentForm({ loan, onSuccess }: { loan: LoanSummary; onSucces
   return <form action={formAction} className="grid gap-4">
     <input type="hidden" name="loanId" value={loan.id} />
     <p className="rounded-lg bg-muted px-3 py-2 text-sm break-words">Remaining: <strong className="tabular-nums">{(loan.remainingAmount / 100).toFixed(2)}</strong></p>
-    <label className="grid min-w-0 gap-2 text-sm font-medium">Amount<Input name="amount" type="text" inputMode="decimal" required placeholder="0.00" /></label>
+    <label className="grid min-w-0 gap-2 text-sm font-medium">Amount<Input name="amount" type="text" inputMode="decimal" value={amountInput} onChange={(event) => setAmountInput(event.target.value)} required placeholder="0.00" /></label>
+
+    {extra > 0 && <div className="grid gap-3 rounded-lg border border-primary/25 bg-primary/5 p-3">
+      <p className="text-xs text-muted-foreground">You received more than this loan needs, so it will be split:</p>
+      <div className="grid gap-1.5 text-sm">
+        <div className="flex items-center justify-between gap-3"><span className="min-w-0 truncate">Closes this loan</span><strong className="shrink-0 tabular-nums">{formatMoney(applied)}</strong></div>
+        <div className="flex items-center justify-between gap-3"><span className="min-w-0 truncate">Extra, saved as {extraType === "INCOME" ? "income" : "expense"}</span><strong className="shrink-0 tabular-nums">{formatMoney(extra)}</strong></div>
+      </div>
+      <label className="grid min-w-0 gap-2 text-sm font-medium">Extra goes to
+        <select name="extraCategoryId" defaultValue={fallbackCategory?.id ?? ""} className="h-10 w-full min-w-0 rounded-lg border bg-background px-3 text-sm">
+          <option value="">Uncategorized</option>
+          {extraCategories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
+        </select>
+      </label>
+    </div>}
+
     <label className="grid min-w-0 gap-2 text-sm font-medium">{loan.type === "RECEIVABLE" ? "Received in" : "Paid from"}<select name="accountId" required className="h-10 w-full min-w-0 rounded-lg border bg-background px-3 text-sm"><option value="">Select account</option>{accounts.filter((account) => !account.isArchived).map((account) => <option key={account.id} value={account.id}>{account.name}</option>)}</select></label>
     <label className="grid min-w-0 gap-2 text-sm font-medium">Date<Input name="date" type="date" defaultValue={today} required /></label>
-    <label className="grid min-w-0 gap-2 text-sm font-medium"><span className="flex flex-wrap items-baseline gap-1">Note <span className={optionalLabel}>(optional)</span></span><Input name="note" maxLength={300} /></label>
+    <label className="grid gap-2 text-sm font-medium"><span className="flex flex-wrap items-baseline gap-1">Note <span className={optionalLabel}>(optional)</span></span><Input name="note" maxLength={300} /></label>
     {state.error && <p role="alert" className="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">{state.error}</p>}
-    <Button type="submit" disabled={pending}>{pending ? "Saving…" : "Add repayment"}</Button>
+    <Button type="submit" disabled={pending}>{pending ? "Saving…" : extra > 0 ? `Add repayment + ${formatMoney(extra)} extra` : "Add repayment"}</Button>
   </form>
 }
+
