@@ -6,6 +6,8 @@
     "postinstall": "prisma generate",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
+    "db:preview-loan-people": "tsx scripts/preview-loan-people.ts",
+    "db:migrate:turso": "tsx scripts/migrate-turso.ts",
     "db:seed": "tsx prisma/seed.ts",
     "dev": "next dev",
     "build": "next build",

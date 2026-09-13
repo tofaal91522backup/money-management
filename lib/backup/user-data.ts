@@ -49,6 +49,8 @@ export const backupColumns = [
   "accountId",
   "personName",
   "personContact",
+  "personId",
+  "contact",
   "originalAmount",
   "startDate",
   "dueDate",
@@ -64,12 +66,13 @@ export const backupColumns = [
 ] as const
 
 type BackupColumn = (typeof backupColumns)[number]
-type RecordKind = "meta" | "account" | "category" | "loan" | "loanRepayment" | "transaction" | "budget" | "settings"
+type RecordKind = "meta" | "account" | "category" | "loanPerson" | "loan" | "loanRepayment" | "transaction" | "budget" | "settings"
 type CellValues = Partial<Record<Exclude<BackupColumn, "record">, string>>
 
 export type ImportSummary = {
   accounts: number
   categories: number
+  people: number
   loans: number
   repayments: number
   transactions: number
@@ -87,9 +90,10 @@ export function backupFileName(now = new Date()) {
 }
 
 export async function exportUserDataCsv(userId: string) {
-  const [accounts, categories, loans, repayments, transactions, budgets, settings] = await Promise.all([
+  const [accounts, categories, people, loans, repayments, transactions, budgets, settings] = await Promise.all([
     prisma.account.findMany({ where: { userId }, orderBy: { createdAt: "asc" } }),
     prisma.category.findMany({ where: { userId }, orderBy: { createdAt: "asc" } }),
+    prisma.loanPerson.findMany({ where: { userId }, orderBy: { createdAt: "asc" } }),
     prisma.loan.findMany({ where: { userId }, orderBy: { createdAt: "asc" } }),
     prisma.loanRepayment.findMany({ where: { userId }, orderBy: { createdAt: "asc" } }),
     prisma.transaction.findMany({ where: { userId }, orderBy: { createdAt: "asc" } }),
@@ -131,11 +135,23 @@ export async function exportUserDataCsv(userId: string) {
     })
   }
 
+  for (const person of people) {
+    push("loanPerson", {
+      id: person.id,
+      createdAt: stamp(person.createdAt),
+      name: person.name,
+      contact: person.contact ?? "",
+      note: person.note ?? "",
+      isArchived: flag(person.isArchived),
+    })
+  }
+
   for (const loan of loans) {
     push("loan", {
       id: loan.id,
       createdAt: stamp(loan.createdAt),
       type: loan.type,
+      personId: loan.personId ?? "",
       personName: loan.personName,
       personContact: loan.personContact ?? "",
       originalAmount: money(loan.originalAmount),
@@ -321,7 +337,7 @@ export function readBackupCsv(userId: string, csv: string) {
     throw new BackupFormatError(`This file uses backup format ${version}, but this app reads format ${BACKUP_FORMAT_VERSION}.`)
   }
 
-  const known: RecordKind[] = ["meta", "account", "category", "loan", "loanRepayment", "transaction", "budget", "settings"]
+  const known: RecordKind[] = ["meta", "account", "category", "loanPerson", "loan", "loanRepayment", "transaction", "budget", "settings"]
   const unknown = rows.find((row) => !known.includes(row.kind as RecordKind))
   if (unknown) {
     throw new BackupFormatError(`Row ${unknown.line}: “${unknown.kind || "(blank)"}” is not a known record type.`)
@@ -329,6 +345,7 @@ export function readBackupCsv(userId: string, csv: string) {
 
   const accountIds = new Map<string, string>()
   const categoryIds = new Map<string, string>()
+  const personIds = new Map<string, string>()
   const loanIds = new Map<string, string>()
   const repaymentIds = new Map<string, string>()
 
@@ -374,13 +391,50 @@ export function readBackupCsv(userId: string, csv: string) {
       }
     })
 
+  const personNames = new Set<string>()
+  const people = rows
+    .filter((row) => row.kind === "loanPerson")
+    .map((row) => {
+      const name = requireText(row, "name", 80)
+      requireUnique(personNames, name.trim().toLowerCase(), `Row ${row.line}: more than one person is named “${name}”.`)
+      return {
+        id: claimId(personIds, row),
+        userId,
+        createdAt: readCreatedAt(row),
+        name,
+        contact: optionalText(row, "contact"),
+        note: optionalText(row, "note"),
+        isArchived: readFlag(row, "isArchived"),
+      }
+    })
+
+  /**
+   * A backup written before people existed carries only a name on each loan, so
+   * those files are grouped the same way the upgrade grouped them: one person
+   * per name, matched without regard to case.
+   */
+  const peopleByName = new Map(people.map((person) => [person.name.trim().toLowerCase(), person]))
+  const personForLoan = (row: SourceRow, name: string) => {
+    const reference = row.value("personId")
+    if (reference) return resolveId(personIds, reference, "person", row)
+    const existing = peopleByName.get(name.trim().toLowerCase())
+    if (existing) return existing.id
+    const created = { id: randomUUID(), userId, createdAt: readCreatedAt(row), name, contact: optionalText(row, "personContact"), note: null, isArchived: false }
+    people.push(created)
+    peopleByName.set(name.trim().toLowerCase(), created)
+    return created.id
+  }
+
   const loans = rows
     .filter((row) => row.kind === "loan")
-    .map((row) => ({
+    .map((row) => {
+      const personName = requireText(row, "personName", 80)
+      return {
       id: claimId(loanIds, row),
       userId,
       createdAt: readCreatedAt(row),
-      personName: requireText(row, "personName", 80),
+      personId: personForLoan(row, personName),
+      personName,
       personContact: optionalText(row, "personContact"),
       type: requireEnum(row, "type", LoanType),
       originalAmount: readMoney(row, "originalAmount"),
@@ -389,7 +443,8 @@ export function readBackupCsv(userId: string, csv: string) {
       note: optionalText(row, "note"),
       status: requireEnum(row, "status", LoanStatus),
       originAccountId: resolveId(accountIds, requireText(row, "originAccountId"), "account", row),
-    }))
+      }
+    })
 
   const repayments = rows
     .filter((row) => row.kind === "loanRepayment")
@@ -469,7 +524,7 @@ export function readBackupCsv(userId: string, csv: string) {
     throw new BackupFormatError("This file has no accounts, categories or transactions to import.")
   }
 
-  return { accounts, categories, loans, repayments, transactions, budgets, settings }
+  return { accounts, categories, people, loans, repayments, transactions, budgets, settings }
 }
 
 export async function importUserDataCsv(userId: string, csv: string): Promise<ImportSummary> {
@@ -481,12 +536,14 @@ export async function importUserDataCsv(userId: string, csv: string): Promise<Im
       await tx.transaction.deleteMany({ where: { userId } })
       await tx.loanRepayment.deleteMany({ where: { userId } })
       await tx.loan.deleteMany({ where: { userId } })
+      await tx.loanPerson.deleteMany({ where: { userId } })
       await tx.budget.deleteMany({ where: { userId } })
       await tx.category.deleteMany({ where: { userId } })
       await tx.account.deleteMany({ where: { userId } })
 
       if (data.accounts.length) await tx.account.createMany({ data: data.accounts })
       if (data.categories.length) await tx.category.createMany({ data: data.categories })
+      if (data.people.length) await tx.loanPerson.createMany({ data: data.people })
       if (data.loans.length) await tx.loan.createMany({ data: data.loans })
       if (data.repayments.length) await tx.loanRepayment.createMany({ data: data.repayments })
       if (data.transactions.length) await tx.transaction.createMany({ data: data.transactions })
@@ -506,6 +563,7 @@ export async function importUserDataCsv(userId: string, csv: string): Promise<Im
   return {
     accounts: data.accounts.length,
     categories: data.categories.length,
+    people: data.people.length,
     loans: data.loans.length,
     repayments: data.repayments.length,
     transactions: data.transactions.length,

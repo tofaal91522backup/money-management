@@ -85,7 +85,7 @@ function DataBackupCard() {
         <label className="grid min-w-0 gap-2 text-sm font-medium">CSV file<Input name="file" type="file" accept=".csv,text/csv" required disabled={pending} className="h-auto py-2 file:mr-3 file:rounded-md file:border-0 file:bg-muted file:px-2 file:py-1 file:text-xs file:font-medium" /></label>
         <label className="grid min-w-0 gap-2 text-sm font-medium">Confirm with your password<Input name="password" type="password" autoComplete="current-password" placeholder="Enter your login password" required disabled={pending} /></label>
         {state.error && <p role="alert" className="rounded-lg border border-destructive/20 bg-destructive/10 px-3 py-2.5 text-sm text-destructive">{state.error}</p>}
-        {summary && <p role="status" className="rounded-lg border border-success-foreground/15 bg-success px-3 py-2.5 text-sm text-success-foreground">Imported {summary.accounts} accounts, {summary.categories} categories, {summary.transactions} transactions, {summary.loans} loans, {summary.repayments} repayments and {summary.budgets} budgets.</p>}
+        {summary && <p role="status" className="rounded-lg border border-success-foreground/15 bg-success px-3 py-2.5 text-sm text-success-foreground">Imported {summary.accounts} accounts, {summary.categories} categories, {summary.transactions} transactions, {summary.people} people, {summary.loans} loans, {summary.repayments} repayments and {summary.budgets} budgets.</p>}
         <Button className="w-full sm:ml-auto sm:w-auto" variant="outline" size="lg" type="submit" disabled={pending}>{pending ? "Importing\u2026" : <><Upload data-icon="inline-start" />Import CSV</>}</Button>
       </form>
     </CardContent>

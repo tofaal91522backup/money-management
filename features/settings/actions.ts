@@ -61,6 +61,7 @@ export async function resetAllDataAction(_: ResetDataFormState, formData: FormDa
     await tx.transaction.deleteMany({ where: { userId: user.id } })
     await tx.loanRepayment.deleteMany({ where: { userId: user.id } })
     await tx.loan.deleteMany({ where: { userId: user.id } })
+    await tx.loanPerson.deleteMany({ where: { userId: user.id } })
     await tx.budget.deleteMany({ where: { userId: user.id } })
     await tx.category.deleteMany({ where: { userId: user.id } })
     await tx.account.deleteMany({ where: { userId: user.id } })

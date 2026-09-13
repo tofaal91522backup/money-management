@@ -403,6 +403,7 @@ export const ModelName = {
   Account: 'Account',
   Category: 'Category',
   Transaction: 'Transaction',
+  LoanPerson: 'LoanPerson',
   Loan: 'Loan',
   LoanRepayment: 'LoanRepayment',
   Budget: 'Budget'
@@ -421,7 +422,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "userSettings" | "account" | "category" | "transaction" | "loan" | "loanRepayment" | "budget"
+    modelProps: "user" | "session" | "userSettings" | "account" | "category" | "transaction" | "loanPerson" | "loan" | "loanRepayment" | "budget"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -869,6 +870,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    LoanPerson: {
+      payload: Prisma.$LoanPersonPayload<ExtArgs>
+      fields: Prisma.LoanPersonFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LoanPersonFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanPersonPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LoanPersonFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanPersonPayload>
+        }
+        findFirst: {
+          args: Prisma.LoanPersonFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanPersonPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LoanPersonFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanPersonPayload>
+        }
+        findMany: {
+          args: Prisma.LoanPersonFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanPersonPayload>[]
+        }
+        create: {
+          args: Prisma.LoanPersonCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanPersonPayload>
+        }
+        createMany: {
+          args: Prisma.LoanPersonCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LoanPersonCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanPersonPayload>[]
+        }
+        delete: {
+          args: Prisma.LoanPersonDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanPersonPayload>
+        }
+        update: {
+          args: Prisma.LoanPersonUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanPersonPayload>
+        }
+        deleteMany: {
+          args: Prisma.LoanPersonDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LoanPersonUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LoanPersonUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanPersonPayload>[]
+        }
+        upsert: {
+          args: Prisma.LoanPersonUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanPersonPayload>
+        }
+        aggregate: {
+          args: Prisma.LoanPersonAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLoanPerson>
+        }
+        groupBy: {
+          args: Prisma.LoanPersonGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LoanPersonGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LoanPersonCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LoanPersonCountAggregateOutputType> | number
+        }
+      }
+    }
     Loan: {
       payload: Prisma.$LoanPayload<ExtArgs>
       fields: Prisma.LoanFieldRefs
@@ -1218,6 +1293,20 @@ export const TransactionScalarFieldEnum = {
 export type TransactionScalarFieldEnum = (typeof TransactionScalarFieldEnum)[keyof typeof TransactionScalarFieldEnum]
 
 
+export const LoanPersonScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  contact: 'contact',
+  note: 'note',
+  isArchived: 'isArchived',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  userId: 'userId'
+} as const
+
+export type LoanPersonScalarFieldEnum = (typeof LoanPersonScalarFieldEnum)[keyof typeof LoanPersonScalarFieldEnum]
+
+
 export const LoanScalarFieldEnum = {
   id: 'id',
   personName: 'personName',
@@ -1231,7 +1320,8 @@ export const LoanScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   userId: 'userId',
-  originAccountId: 'originAccountId'
+  originAccountId: 'originAccountId',
+  personId: 'personId'
 } as const
 
 export type LoanScalarFieldEnum = (typeof LoanScalarFieldEnum)[keyof typeof LoanScalarFieldEnum]
@@ -1528,6 +1618,7 @@ export type GlobalOmitConfig = {
   account?: Prisma.AccountOmit
   category?: Prisma.CategoryOmit
   transaction?: Prisma.TransactionOmit
+  loanPerson?: Prisma.LoanPersonOmit
   loan?: Prisma.LoanOmit
   loanRepayment?: Prisma.LoanRepaymentOmit
   budget?: Prisma.BudgetOmit

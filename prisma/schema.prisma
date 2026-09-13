@@ -64,6 +64,7 @@ model User {
   accounts     Account[]
   budgets      Budget[]
   categories   Category[]
+  loanPeople   LoanPerson[]
   loans        Loan[]
   repayments   LoanRepayment[]
   sessions     Session[]
@@ -176,6 +177,23 @@ model Transaction {
   @@index([loanId, date])
 }
 
+model LoanPerson {
+  id         String   @id @default(cuid())
+  name       String
+  contact    String?
+  note       String?
+  isArchived Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  userId     String
+
+  loans Loan[]
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, name])
+  @@index([userId, isArchived])
+}
+
 model Loan {
   id              String     @id @default(cuid())
   personName      String
@@ -190,14 +208,17 @@ model Loan {
   updatedAt       DateTime   @updatedAt
   userId          String
   originAccountId String
+  personId        String?
 
   originAccount Account         @relation("LoanOriginAccount", fields: [originAccountId], references: [id], onDelete: Restrict)
+  person        LoanPerson?     @relation(fields: [personId], references: [id], onDelete: SetNull)
   repayments    LoanRepayment[]
   transactions  Transaction[]
   user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, type, status])
   @@index([userId, dueDate])
+  @@index([personId])
 }
 
 model LoanRepayment {

@@ -57,6 +57,7 @@ export const ModelName = {
   Account: 'Account',
   Category: 'Category',
   Transaction: 'Transaction',
+  LoanPerson: 'LoanPerson',
   Loan: 'Loan',
   LoanRepayment: 'LoanRepayment',
   Budget: 'Budget'
@@ -166,6 +167,20 @@ export const TransactionScalarFieldEnum = {
 export type TransactionScalarFieldEnum = (typeof TransactionScalarFieldEnum)[keyof typeof TransactionScalarFieldEnum]
 
 
+export const LoanPersonScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  contact: 'contact',
+  note: 'note',
+  isArchived: 'isArchived',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  userId: 'userId'
+} as const
+
+export type LoanPersonScalarFieldEnum = (typeof LoanPersonScalarFieldEnum)[keyof typeof LoanPersonScalarFieldEnum]
+
+
 export const LoanScalarFieldEnum = {
   id: 'id',
   personName: 'personName',
@@ -179,7 +194,8 @@ export const LoanScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   userId: 'userId',
-  originAccountId: 'originAccountId'
+  originAccountId: 'originAccountId',
+  personId: 'personId'
 } as const
 
 export type LoanScalarFieldEnum = (typeof LoanScalarFieldEnum)[keyof typeof LoanScalarFieldEnum]

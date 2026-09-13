@@ -193,6 +193,7 @@ export type UserWhereInput = {
   accounts?: Prisma.AccountListRelationFilter
   budgets?: Prisma.BudgetListRelationFilter
   categories?: Prisma.CategoryListRelationFilter
+  loanPeople?: Prisma.LoanPersonListRelationFilter
   loans?: Prisma.LoanListRelationFilter
   repayments?: Prisma.LoanRepaymentListRelationFilter
   sessions?: Prisma.SessionListRelationFilter
@@ -210,6 +211,7 @@ export type UserOrderByWithRelationInput = {
   accounts?: Prisma.AccountOrderByRelationAggregateInput
   budgets?: Prisma.BudgetOrderByRelationAggregateInput
   categories?: Prisma.CategoryOrderByRelationAggregateInput
+  loanPeople?: Prisma.LoanPersonOrderByRelationAggregateInput
   loans?: Prisma.LoanOrderByRelationAggregateInput
   repayments?: Prisma.LoanRepaymentOrderByRelationAggregateInput
   sessions?: Prisma.SessionOrderByRelationAggregateInput
@@ -230,6 +232,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   accounts?: Prisma.AccountListRelationFilter
   budgets?: Prisma.BudgetListRelationFilter
   categories?: Prisma.CategoryListRelationFilter
+  loanPeople?: Prisma.LoanPersonListRelationFilter
   loans?: Prisma.LoanListRelationFilter
   repayments?: Prisma.LoanRepaymentListRelationFilter
   sessions?: Prisma.SessionListRelationFilter
@@ -271,6 +274,7 @@ export type UserCreateInput = {
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   budgets?: Prisma.BudgetCreateNestedManyWithoutUserInput
   categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
+  loanPeople?: Prisma.LoanPersonCreateNestedManyWithoutUserInput
   loans?: Prisma.LoanCreateNestedManyWithoutUserInput
   repayments?: Prisma.LoanRepaymentCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -288,6 +292,7 @@ export type UserUncheckedCreateInput = {
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   budgets?: Prisma.BudgetUncheckedCreateNestedManyWithoutUserInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
+  loanPeople?: Prisma.LoanPersonUncheckedCreateNestedManyWithoutUserInput
   loans?: Prisma.LoanUncheckedCreateNestedManyWithoutUserInput
   repayments?: Prisma.LoanRepaymentUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -305,6 +310,7 @@ export type UserUpdateInput = {
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   budgets?: Prisma.BudgetUpdateManyWithoutUserNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
+  loanPeople?: Prisma.LoanPersonUpdateManyWithoutUserNestedInput
   loans?: Prisma.LoanUpdateManyWithoutUserNestedInput
   repayments?: Prisma.LoanRepaymentUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -322,6 +328,7 @@ export type UserUncheckedUpdateInput = {
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   budgets?: Prisma.BudgetUncheckedUpdateManyWithoutUserNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
+  loanPeople?: Prisma.LoanPersonUncheckedUpdateManyWithoutUserNestedInput
   loans?: Prisma.LoanUncheckedUpdateManyWithoutUserNestedInput
   repayments?: Prisma.LoanRepaymentUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -470,6 +477,20 @@ export type UserUpdateOneRequiredWithoutTransactionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTransactionsInput, Prisma.UserUpdateWithoutTransactionsInput>, Prisma.UserUncheckedUpdateWithoutTransactionsInput>
 }
 
+export type UserCreateNestedOneWithoutLoanPeopleInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutLoanPeopleInput, Prisma.UserUncheckedCreateWithoutLoanPeopleInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutLoanPeopleInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutLoanPeopleNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutLoanPeopleInput, Prisma.UserUncheckedCreateWithoutLoanPeopleInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutLoanPeopleInput
+  upsert?: Prisma.UserUpsertWithoutLoanPeopleInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutLoanPeopleInput, Prisma.UserUpdateWithoutLoanPeopleInput>, Prisma.UserUncheckedUpdateWithoutLoanPeopleInput>
+}
+
 export type UserCreateNestedOneWithoutLoansInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutLoansInput, Prisma.UserUncheckedCreateWithoutLoansInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutLoansInput
@@ -522,6 +543,7 @@ export type UserCreateWithoutSessionsInput = {
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   budgets?: Prisma.BudgetCreateNestedManyWithoutUserInput
   categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
+  loanPeople?: Prisma.LoanPersonCreateNestedManyWithoutUserInput
   loans?: Prisma.LoanCreateNestedManyWithoutUserInput
   repayments?: Prisma.LoanRepaymentCreateNestedManyWithoutUserInput
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
@@ -538,6 +560,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   budgets?: Prisma.BudgetUncheckedCreateNestedManyWithoutUserInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
+  loanPeople?: Prisma.LoanPersonUncheckedCreateNestedManyWithoutUserInput
   loans?: Prisma.LoanUncheckedCreateNestedManyWithoutUserInput
   repayments?: Prisma.LoanRepaymentUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
@@ -570,6 +593,7 @@ export type UserUpdateWithoutSessionsInput = {
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   budgets?: Prisma.BudgetUpdateManyWithoutUserNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
+  loanPeople?: Prisma.LoanPersonUpdateManyWithoutUserNestedInput
   loans?: Prisma.LoanUpdateManyWithoutUserNestedInput
   repayments?: Prisma.LoanRepaymentUpdateManyWithoutUserNestedInput
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
@@ -586,6 +610,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   budgets?: Prisma.BudgetUncheckedUpdateManyWithoutUserNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
+  loanPeople?: Prisma.LoanPersonUncheckedUpdateManyWithoutUserNestedInput
   loans?: Prisma.LoanUncheckedUpdateManyWithoutUserNestedInput
   repayments?: Prisma.LoanRepaymentUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
@@ -602,6 +627,7 @@ export type UserCreateWithoutSettingsInput = {
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   budgets?: Prisma.BudgetCreateNestedManyWithoutUserInput
   categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
+  loanPeople?: Prisma.LoanPersonCreateNestedManyWithoutUserInput
   loans?: Prisma.LoanCreateNestedManyWithoutUserInput
   repayments?: Prisma.LoanRepaymentCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -618,6 +644,7 @@ export type UserUncheckedCreateWithoutSettingsInput = {
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   budgets?: Prisma.BudgetUncheckedCreateNestedManyWithoutUserInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
+  loanPeople?: Prisma.LoanPersonUncheckedCreateNestedManyWithoutUserInput
   loans?: Prisma.LoanUncheckedCreateNestedManyWithoutUserInput
   repayments?: Prisma.LoanRepaymentUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -650,6 +677,7 @@ export type UserUpdateWithoutSettingsInput = {
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   budgets?: Prisma.BudgetUpdateManyWithoutUserNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
+  loanPeople?: Prisma.LoanPersonUpdateManyWithoutUserNestedInput
   loans?: Prisma.LoanUpdateManyWithoutUserNestedInput
   repayments?: Prisma.LoanRepaymentUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -666,6 +694,7 @@ export type UserUncheckedUpdateWithoutSettingsInput = {
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   budgets?: Prisma.BudgetUncheckedUpdateManyWithoutUserNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
+  loanPeople?: Prisma.LoanPersonUncheckedUpdateManyWithoutUserNestedInput
   loans?: Prisma.LoanUncheckedUpdateManyWithoutUserNestedInput
   repayments?: Prisma.LoanRepaymentUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -681,6 +710,7 @@ export type UserCreateWithoutAccountsInput = {
   updatedAt?: Date | string
   budgets?: Prisma.BudgetCreateNestedManyWithoutUserInput
   categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
+  loanPeople?: Prisma.LoanPersonCreateNestedManyWithoutUserInput
   loans?: Prisma.LoanCreateNestedManyWithoutUserInput
   repayments?: Prisma.LoanRepaymentCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -697,6 +727,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   updatedAt?: Date | string
   budgets?: Prisma.BudgetUncheckedCreateNestedManyWithoutUserInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
+  loanPeople?: Prisma.LoanPersonUncheckedCreateNestedManyWithoutUserInput
   loans?: Prisma.LoanUncheckedCreateNestedManyWithoutUserInput
   repayments?: Prisma.LoanRepaymentUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -729,6 +760,7 @@ export type UserUpdateWithoutAccountsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   budgets?: Prisma.BudgetUpdateManyWithoutUserNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
+  loanPeople?: Prisma.LoanPersonUpdateManyWithoutUserNestedInput
   loans?: Prisma.LoanUpdateManyWithoutUserNestedInput
   repayments?: Prisma.LoanRepaymentUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -745,6 +777,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   budgets?: Prisma.BudgetUncheckedUpdateManyWithoutUserNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
+  loanPeople?: Prisma.LoanPersonUncheckedUpdateManyWithoutUserNestedInput
   loans?: Prisma.LoanUncheckedUpdateManyWithoutUserNestedInput
   repayments?: Prisma.LoanRepaymentUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -761,6 +794,7 @@ export type UserCreateWithoutCategoriesInput = {
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   budgets?: Prisma.BudgetCreateNestedManyWithoutUserInput
+  loanPeople?: Prisma.LoanPersonCreateNestedManyWithoutUserInput
   loans?: Prisma.LoanCreateNestedManyWithoutUserInput
   repayments?: Prisma.LoanRepaymentCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -777,6 +811,7 @@ export type UserUncheckedCreateWithoutCategoriesInput = {
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   budgets?: Prisma.BudgetUncheckedCreateNestedManyWithoutUserInput
+  loanPeople?: Prisma.LoanPersonUncheckedCreateNestedManyWithoutUserInput
   loans?: Prisma.LoanUncheckedCreateNestedManyWithoutUserInput
   repayments?: Prisma.LoanRepaymentUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -809,6 +844,7 @@ export type UserUpdateWithoutCategoriesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   budgets?: Prisma.BudgetUpdateManyWithoutUserNestedInput
+  loanPeople?: Prisma.LoanPersonUpdateManyWithoutUserNestedInput
   loans?: Prisma.LoanUpdateManyWithoutUserNestedInput
   repayments?: Prisma.LoanRepaymentUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -825,6 +861,7 @@ export type UserUncheckedUpdateWithoutCategoriesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   budgets?: Prisma.BudgetUncheckedUpdateManyWithoutUserNestedInput
+  loanPeople?: Prisma.LoanPersonUncheckedUpdateManyWithoutUserNestedInput
   loans?: Prisma.LoanUncheckedUpdateManyWithoutUserNestedInput
   repayments?: Prisma.LoanRepaymentUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -842,6 +879,7 @@ export type UserCreateWithoutTransactionsInput = {
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   budgets?: Prisma.BudgetCreateNestedManyWithoutUserInput
   categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
+  loanPeople?: Prisma.LoanPersonCreateNestedManyWithoutUserInput
   loans?: Prisma.LoanCreateNestedManyWithoutUserInput
   repayments?: Prisma.LoanRepaymentCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -858,6 +896,7 @@ export type UserUncheckedCreateWithoutTransactionsInput = {
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   budgets?: Prisma.BudgetUncheckedCreateNestedManyWithoutUserInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
+  loanPeople?: Prisma.LoanPersonUncheckedCreateNestedManyWithoutUserInput
   loans?: Prisma.LoanUncheckedCreateNestedManyWithoutUserInput
   repayments?: Prisma.LoanRepaymentUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -890,6 +929,7 @@ export type UserUpdateWithoutTransactionsInput = {
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   budgets?: Prisma.BudgetUpdateManyWithoutUserNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
+  loanPeople?: Prisma.LoanPersonUpdateManyWithoutUserNestedInput
   loans?: Prisma.LoanUpdateManyWithoutUserNestedInput
   repayments?: Prisma.LoanRepaymentUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -906,10 +946,95 @@ export type UserUncheckedUpdateWithoutTransactionsInput = {
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   budgets?: Prisma.BudgetUncheckedUpdateManyWithoutUserNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
+  loanPeople?: Prisma.LoanPersonUncheckedUpdateManyWithoutUserNestedInput
   loans?: Prisma.LoanUncheckedUpdateManyWithoutUserNestedInput
   repayments?: Prisma.LoanRepaymentUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+}
+
+export type UserCreateWithoutLoanPeopleInput = {
+  id?: string
+  email: string
+  name?: string | null
+  passwordHash: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  budgets?: Prisma.BudgetCreateNestedManyWithoutUserInput
+  categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
+  loans?: Prisma.LoanCreateNestedManyWithoutUserInput
+  repayments?: Prisma.LoanRepaymentCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutLoanPeopleInput = {
+  id?: string
+  email: string
+  name?: string | null
+  passwordHash: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  budgets?: Prisma.BudgetUncheckedCreateNestedManyWithoutUserInput
+  categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
+  loans?: Prisma.LoanUncheckedCreateNestedManyWithoutUserInput
+  repayments?: Prisma.LoanRepaymentUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutLoanPeopleInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutLoanPeopleInput, Prisma.UserUncheckedCreateWithoutLoanPeopleInput>
+}
+
+export type UserUpsertWithoutLoanPeopleInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutLoanPeopleInput, Prisma.UserUncheckedUpdateWithoutLoanPeopleInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutLoanPeopleInput, Prisma.UserUncheckedCreateWithoutLoanPeopleInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutLoanPeopleInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutLoanPeopleInput, Prisma.UserUncheckedUpdateWithoutLoanPeopleInput>
+}
+
+export type UserUpdateWithoutLoanPeopleInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  budgets?: Prisma.BudgetUpdateManyWithoutUserNestedInput
+  categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
+  loans?: Prisma.LoanUpdateManyWithoutUserNestedInput
+  repayments?: Prisma.LoanRepaymentUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutLoanPeopleInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  budgets?: Prisma.BudgetUncheckedUpdateManyWithoutUserNestedInput
+  categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
+  loans?: Prisma.LoanUncheckedUpdateManyWithoutUserNestedInput
+  repayments?: Prisma.LoanRepaymentUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutLoansInput = {
@@ -922,6 +1047,7 @@ export type UserCreateWithoutLoansInput = {
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   budgets?: Prisma.BudgetCreateNestedManyWithoutUserInput
   categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
+  loanPeople?: Prisma.LoanPersonCreateNestedManyWithoutUserInput
   repayments?: Prisma.LoanRepaymentCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
@@ -938,6 +1064,7 @@ export type UserUncheckedCreateWithoutLoansInput = {
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   budgets?: Prisma.BudgetUncheckedCreateNestedManyWithoutUserInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
+  loanPeople?: Prisma.LoanPersonUncheckedCreateNestedManyWithoutUserInput
   repayments?: Prisma.LoanRepaymentUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
@@ -970,6 +1097,7 @@ export type UserUpdateWithoutLoansInput = {
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   budgets?: Prisma.BudgetUpdateManyWithoutUserNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
+  loanPeople?: Prisma.LoanPersonUpdateManyWithoutUserNestedInput
   repayments?: Prisma.LoanRepaymentUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
@@ -986,6 +1114,7 @@ export type UserUncheckedUpdateWithoutLoansInput = {
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   budgets?: Prisma.BudgetUncheckedUpdateManyWithoutUserNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
+  loanPeople?: Prisma.LoanPersonUncheckedUpdateManyWithoutUserNestedInput
   repayments?: Prisma.LoanRepaymentUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
@@ -1002,6 +1131,7 @@ export type UserCreateWithoutRepaymentsInput = {
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   budgets?: Prisma.BudgetCreateNestedManyWithoutUserInput
   categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
+  loanPeople?: Prisma.LoanPersonCreateNestedManyWithoutUserInput
   loans?: Prisma.LoanCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   settings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
@@ -1018,6 +1148,7 @@ export type UserUncheckedCreateWithoutRepaymentsInput = {
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   budgets?: Prisma.BudgetUncheckedCreateNestedManyWithoutUserInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
+  loanPeople?: Prisma.LoanPersonUncheckedCreateNestedManyWithoutUserInput
   loans?: Prisma.LoanUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
@@ -1050,6 +1181,7 @@ export type UserUpdateWithoutRepaymentsInput = {
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   budgets?: Prisma.BudgetUpdateManyWithoutUserNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
+  loanPeople?: Prisma.LoanPersonUpdateManyWithoutUserNestedInput
   loans?: Prisma.LoanUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   settings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
@@ -1066,6 +1198,7 @@ export type UserUncheckedUpdateWithoutRepaymentsInput = {
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   budgets?: Prisma.BudgetUncheckedUpdateManyWithoutUserNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
+  loanPeople?: Prisma.LoanPersonUncheckedUpdateManyWithoutUserNestedInput
   loans?: Prisma.LoanUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
@@ -1081,6 +1214,7 @@ export type UserCreateWithoutBudgetsInput = {
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
+  loanPeople?: Prisma.LoanPersonCreateNestedManyWithoutUserInput
   loans?: Prisma.LoanCreateNestedManyWithoutUserInput
   repayments?: Prisma.LoanRepaymentCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
@@ -1097,6 +1231,7 @@ export type UserUncheckedCreateWithoutBudgetsInput = {
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
+  loanPeople?: Prisma.LoanPersonUncheckedCreateNestedManyWithoutUserInput
   loans?: Prisma.LoanUncheckedCreateNestedManyWithoutUserInput
   repayments?: Prisma.LoanRepaymentUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
@@ -1129,6 +1264,7 @@ export type UserUpdateWithoutBudgetsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
+  loanPeople?: Prisma.LoanPersonUpdateManyWithoutUserNestedInput
   loans?: Prisma.LoanUpdateManyWithoutUserNestedInput
   repayments?: Prisma.LoanRepaymentUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
@@ -1145,6 +1281,7 @@ export type UserUncheckedUpdateWithoutBudgetsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
+  loanPeople?: Prisma.LoanPersonUncheckedUpdateManyWithoutUserNestedInput
   loans?: Prisma.LoanUncheckedUpdateManyWithoutUserNestedInput
   repayments?: Prisma.LoanRepaymentUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -1161,6 +1298,7 @@ export type UserCountOutputType = {
   accounts: number
   budgets: number
   categories: number
+  loanPeople: number
   loans: number
   repayments: number
   sessions: number
@@ -1171,6 +1309,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   accounts?: boolean | UserCountOutputTypeCountAccountsArgs
   budgets?: boolean | UserCountOutputTypeCountBudgetsArgs
   categories?: boolean | UserCountOutputTypeCountCategoriesArgs
+  loanPeople?: boolean | UserCountOutputTypeCountLoanPeopleArgs
   loans?: boolean | UserCountOutputTypeCountLoansArgs
   repayments?: boolean | UserCountOutputTypeCountRepaymentsArgs
   sessions?: boolean | UserCountOutputTypeCountSessionsArgs
@@ -1206,6 +1345,13 @@ export type UserCountOutputTypeCountBudgetsArgs<ExtArgs extends runtime.Types.Ex
  */
 export type UserCountOutputTypeCountCategoriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.CategoryWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountLoanPeopleArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LoanPersonWhereInput
 }
 
 /**
@@ -1247,6 +1393,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   budgets?: boolean | Prisma.User$budgetsArgs<ExtArgs>
   categories?: boolean | Prisma.User$categoriesArgs<ExtArgs>
+  loanPeople?: boolean | Prisma.User$loanPeopleArgs<ExtArgs>
   loans?: boolean | Prisma.User$loansArgs<ExtArgs>
   repayments?: boolean | Prisma.User$repaymentsArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
@@ -1287,6 +1434,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   budgets?: boolean | Prisma.User$budgetsArgs<ExtArgs>
   categories?: boolean | Prisma.User$categoriesArgs<ExtArgs>
+  loanPeople?: boolean | Prisma.User$loanPeopleArgs<ExtArgs>
   loans?: boolean | Prisma.User$loansArgs<ExtArgs>
   repayments?: boolean | Prisma.User$repaymentsArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
@@ -1303,6 +1451,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     accounts: Prisma.$AccountPayload<ExtArgs>[]
     budgets: Prisma.$BudgetPayload<ExtArgs>[]
     categories: Prisma.$CategoryPayload<ExtArgs>[]
+    loanPeople: Prisma.$LoanPersonPayload<ExtArgs>[]
     loans: Prisma.$LoanPayload<ExtArgs>[]
     repayments: Prisma.$LoanRepaymentPayload<ExtArgs>[]
     sessions: Prisma.$SessionPayload<ExtArgs>[]
@@ -1713,6 +1862,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   accounts<T extends Prisma.User$accountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   budgets<T extends Prisma.User$budgetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$budgetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BudgetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   categories<T extends Prisma.User$categoriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$categoriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  loanPeople<T extends Prisma.User$loanPeopleArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$loanPeopleArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LoanPersonPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   loans<T extends Prisma.User$loansArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$loansArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LoanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   repayments<T extends Prisma.User$repaymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$repaymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LoanRepaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   sessions<T extends Prisma.User$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2213,6 +2363,30 @@ export type User$categoriesArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.CategoryScalarFieldEnum | Prisma.CategoryScalarFieldEnum[]
+}
+
+/**
+ * User.loanPeople
+ */
+export type User$loanPeopleArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LoanPerson
+   */
+  select?: Prisma.LoanPersonSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LoanPerson
+   */
+  omit?: Prisma.LoanPersonOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LoanPersonInclude<ExtArgs> | null
+  where?: Prisma.LoanPersonWhereInput
+  orderBy?: Prisma.LoanPersonOrderByWithRelationInput | Prisma.LoanPersonOrderByWithRelationInput[]
+  cursor?: Prisma.LoanPersonWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LoanPersonScalarFieldEnum | Prisma.LoanPersonScalarFieldEnum[]
 }
 
 /**

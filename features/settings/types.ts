@@ -26,6 +26,7 @@ export const settingsQueryKey = ["settings"] as const
 export type ImportSummary = {
   accounts: number
   categories: number
+  people: number
   loans: number
   repayments: number
   transactions: number

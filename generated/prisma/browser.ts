@@ -48,6 +48,11 @@ export type Category = Prisma.CategoryModel
  */
 export type Transaction = Prisma.TransactionModel
 /**
+ * Model LoanPerson
+ * 
+ */
+export type LoanPerson = Prisma.LoanPersonModel
+/**
  * Model Loan
  * 
  */
