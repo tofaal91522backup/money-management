@@ -12,6 +12,7 @@ import { EmptyState } from "@/components/ui/empty-state"
 import { deleteLoanAction } from "@/features/loans/actions"
 import { getLoanPeople, getLoans } from "@/features/loans/api"
 import { DeletePersonForm, LoanForm, PersonForm, RepaymentForm } from "@/features/loans/components/loan-forms"
+import { LoanOverview, LoanPeopleChart, LoanProgress } from "@/features/loans/components/loan-visuals"
 import { loanPeopleQueryKey, loansQueryKey, type LoanPersonSummary, type LoanSummary, type LoanType } from "@/features/loans/types"
 import { formatMoney } from "@/lib/money/currency"
 import { refreshAppData } from "@/lib/query/refresh-app-data"
@@ -36,7 +37,6 @@ export function LoansScreen() {
   const { data: people = [] } = useQuery({ queryKey: loanPeopleQueryKey, queryFn: getLoanPeople })
 
   const entriesOfType = loans.filter((loan) => loan.type === type)
-  const total = entriesOfType.reduce((sum, loan) => sum + loan.remainingAmount, 0)
 
   // A person shows in a tab when they have an entry of that kind, and a brand
   // new person shows in both tabs so the first loan can be added from either.
@@ -70,7 +70,8 @@ export function LoansScreen() {
       <button onClick={() => setType("PAYABLE")} className={`min-w-0 truncate rounded-md px-3 py-2 text-sm font-medium ${type === "PAYABLE" ? "bg-background shadow-sm" : "text-muted-foreground"}`}>I need to repay</button>
     </div>
 
-    <Card className={type === "RECEIVABLE" ? "bg-success" : "bg-warning"}><CardContent className="p-5"><p className="text-sm font-medium">{type === "RECEIVABLE" ? "Total receivable" : "Total payable"}</p><p className="mt-2 text-3xl font-semibold break-words tabular-nums">{formatMoney(total)}</p></CardContent></Card>
+    <LoanOverview loans={entriesOfType} type={type} peopleCount={groups.filter((group) => group.remaining > 0).length} />
+    {!isPending && !isError && <LoanPeopleChart type={type} rows={groups.map((group) => ({ id: group.person.id, name: group.person.name, remaining: group.remaining }))} />}
 
     {isPending && <p className="text-sm text-muted-foreground">Loading loans…</p>}
     {isError && <EmptyState icon={HandCoins} title="Could not load loans" description="Please try again." action={<Button onClick={() => refetch()}>Try again</Button>} />}
@@ -115,12 +116,15 @@ function PersonCard({ group, type, open, onToggle, onAddLoan, onEditPerson, onDe
 }) {
   const { person, entries, remaining } = group
   const overdue = entries.some((entry) => entry.status === "OVERDUE")
+  const original = entries.reduce((sum, entry) => sum + entry.originalAmount, 0)
+  const repaid = entries.reduce((sum, entry) => sum + entry.repaidAmount, 0)
 
   return <Card><CardContent className="p-0">
     <button type="button" onClick={onToggle} aria-expanded={open} className="flex w-full items-start justify-between gap-3 p-5 text-left">
       <div className="min-w-0 flex-1">
         <p className="truncate font-semibold">{person.name}</p>
         <p className="mt-1 truncate text-xs text-muted-foreground">{entries.length === 0 ? "No entries yet" : `${entries.length} ${entries.length === 1 ? "entry" : "entries"}`}{person.contact ? ` · ${person.contact}` : ""}</p>
+        {original > 0 && <LoanProgress className="mt-3 max-w-xs" repaid={repaid} original={original} type={type} />}
       </div>
       <div className="flex shrink-0 items-center gap-3">
         <div className="text-right"><p className="text-xs text-muted-foreground">{type === "RECEIVABLE" ? "To receive" : "To repay"}</p><p className="mt-1 font-semibold break-words tabular-nums">{formatMoney(remaining)}</p></div>
@@ -157,6 +161,7 @@ function LoanEntry({ loan, onRepay, onEdit, onDelete }: { loan: LoanSummary; onR
       <div className="min-w-0"><p className="text-xs text-muted-foreground">Repaid</p><p className="mt-1 font-semibold break-words tabular-nums">{formatMoney(loan.repaidAmount)}</p></div>
       <div className="min-w-0"><p className="text-xs text-muted-foreground">Remaining</p><p className="mt-1 font-semibold break-words tabular-nums">{formatMoney(loan.remainingAmount)}</p></div>
     </div>
+    <LoanProgress className="mt-3" repaid={loan.repaidAmount} original={loan.originalAmount} type={loan.type} />
     {loan.dueDate && <p className="mt-3 text-xs text-muted-foreground">Due {formatDate(loan.dueDate)}</p>}
 
     <div className="mt-4 flex flex-wrap gap-2">
