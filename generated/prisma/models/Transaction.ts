@@ -41,6 +41,7 @@ export type TransactionMinAggregateOutputType = {
   type: $Enums.TransactionType | null
   amount: number | null
   feeAmount: number | null
+  isFamilySupport: boolean | null
   date: Date | null
   note: string | null
   createdAt: Date | null
@@ -58,6 +59,7 @@ export type TransactionMaxAggregateOutputType = {
   type: $Enums.TransactionType | null
   amount: number | null
   feeAmount: number | null
+  isFamilySupport: boolean | null
   date: Date | null
   note: string | null
   createdAt: Date | null
@@ -75,6 +77,7 @@ export type TransactionCountAggregateOutputType = {
   type: number
   amount: number
   feeAmount: number
+  isFamilySupport: number
   date: number
   note: number
   createdAt: number
@@ -104,6 +107,7 @@ export type TransactionMinAggregateInputType = {
   type?: true
   amount?: true
   feeAmount?: true
+  isFamilySupport?: true
   date?: true
   note?: true
   createdAt?: true
@@ -121,6 +125,7 @@ export type TransactionMaxAggregateInputType = {
   type?: true
   amount?: true
   feeAmount?: true
+  isFamilySupport?: true
   date?: true
   note?: true
   createdAt?: true
@@ -138,6 +143,7 @@ export type TransactionCountAggregateInputType = {
   type?: true
   amount?: true
   feeAmount?: true
+  isFamilySupport?: true
   date?: true
   note?: true
   createdAt?: true
@@ -242,6 +248,7 @@ export type TransactionGroupByOutputType = {
   type: $Enums.TransactionType
   amount: number
   feeAmount: number
+  isFamilySupport: boolean
   date: Date
   note: string | null
   createdAt: Date
@@ -282,6 +289,7 @@ export type TransactionWhereInput = {
   type?: Prisma.EnumTransactionTypeFilter<"Transaction"> | $Enums.TransactionType
   amount?: Prisma.IntFilter<"Transaction"> | number
   feeAmount?: Prisma.IntFilter<"Transaction"> | number
+  isFamilySupport?: Prisma.BoolFilter<"Transaction"> | boolean
   date?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   note?: Prisma.StringNullableFilter<"Transaction"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
@@ -305,6 +313,7 @@ export type TransactionOrderByWithRelationInput = {
   type?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   feeAmount?: Prisma.SortOrder
+  isFamilySupport?: Prisma.SortOrder
   date?: Prisma.SortOrder
   note?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -332,6 +341,7 @@ export type TransactionWhereUniqueInput = Prisma.AtLeast<{
   type?: Prisma.EnumTransactionTypeFilter<"Transaction"> | $Enums.TransactionType
   amount?: Prisma.IntFilter<"Transaction"> | number
   feeAmount?: Prisma.IntFilter<"Transaction"> | number
+  isFamilySupport?: Prisma.BoolFilter<"Transaction"> | boolean
   date?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   note?: Prisma.StringNullableFilter<"Transaction"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
@@ -354,6 +364,7 @@ export type TransactionOrderByWithAggregationInput = {
   type?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   feeAmount?: Prisma.SortOrder
+  isFamilySupport?: Prisma.SortOrder
   date?: Prisma.SortOrder
   note?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -379,6 +390,7 @@ export type TransactionScalarWhereWithAggregatesInput = {
   type?: Prisma.EnumTransactionTypeWithAggregatesFilter<"Transaction"> | $Enums.TransactionType
   amount?: Prisma.IntWithAggregatesFilter<"Transaction"> | number
   feeAmount?: Prisma.IntWithAggregatesFilter<"Transaction"> | number
+  isFamilySupport?: Prisma.BoolWithAggregatesFilter<"Transaction"> | boolean
   date?: Prisma.DateTimeWithAggregatesFilter<"Transaction"> | Date | string
   note?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Transaction"> | Date | string
@@ -396,6 +408,7 @@ export type TransactionCreateInput = {
   type: $Enums.TransactionType
   amount: number
   feeAmount?: number
+  isFamilySupport?: boolean
   date: Date | string
   note?: string | null
   createdAt?: Date | string
@@ -413,6 +426,7 @@ export type TransactionUncheckedCreateInput = {
   type: $Enums.TransactionType
   amount: number
   feeAmount?: number
+  isFamilySupport?: boolean
   date: Date | string
   note?: string | null
   createdAt?: Date | string
@@ -430,6 +444,7 @@ export type TransactionUpdateInput = {
   type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   feeAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  isFamilySupport?: Prisma.BoolFieldUpdateOperationsInput | boolean
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -447,6 +462,7 @@ export type TransactionUncheckedUpdateInput = {
   type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   feeAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  isFamilySupport?: Prisma.BoolFieldUpdateOperationsInput | boolean
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -464,6 +480,7 @@ export type TransactionCreateManyInput = {
   type: $Enums.TransactionType
   amount: number
   feeAmount?: number
+  isFamilySupport?: boolean
   date: Date | string
   note?: string | null
   createdAt?: Date | string
@@ -481,6 +498,7 @@ export type TransactionUpdateManyMutationInput = {
   type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   feeAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  isFamilySupport?: Prisma.BoolFieldUpdateOperationsInput | boolean
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -492,6 +510,7 @@ export type TransactionUncheckedUpdateManyInput = {
   type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   feeAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  isFamilySupport?: Prisma.BoolFieldUpdateOperationsInput | boolean
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -519,6 +538,7 @@ export type TransactionCountOrderByAggregateInput = {
   type?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   feeAmount?: Prisma.SortOrder
+  isFamilySupport?: Prisma.SortOrder
   date?: Prisma.SortOrder
   note?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -541,6 +561,7 @@ export type TransactionMaxOrderByAggregateInput = {
   type?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   feeAmount?: Prisma.SortOrder
+  isFamilySupport?: Prisma.SortOrder
   date?: Prisma.SortOrder
   note?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -558,6 +579,7 @@ export type TransactionMinOrderByAggregateInput = {
   type?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   feeAmount?: Prisma.SortOrder
+  isFamilySupport?: Prisma.SortOrder
   date?: Prisma.SortOrder
   note?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -831,6 +853,7 @@ export type TransactionCreateWithoutUserInput = {
   type: $Enums.TransactionType
   amount: number
   feeAmount?: number
+  isFamilySupport?: boolean
   date: Date | string
   note?: string | null
   createdAt?: Date | string
@@ -847,6 +870,7 @@ export type TransactionUncheckedCreateWithoutUserInput = {
   type: $Enums.TransactionType
   amount: number
   feeAmount?: number
+  isFamilySupport?: boolean
   date: Date | string
   note?: string | null
   createdAt?: Date | string
@@ -891,6 +915,7 @@ export type TransactionScalarWhereInput = {
   type?: Prisma.EnumTransactionTypeFilter<"Transaction"> | $Enums.TransactionType
   amount?: Prisma.IntFilter<"Transaction"> | number
   feeAmount?: Prisma.IntFilter<"Transaction"> | number
+  isFamilySupport?: Prisma.BoolFilter<"Transaction"> | boolean
   date?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   note?: Prisma.StringNullableFilter<"Transaction"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
@@ -908,6 +933,7 @@ export type TransactionCreateWithoutDestinationAccountInput = {
   type: $Enums.TransactionType
   amount: number
   feeAmount?: number
+  isFamilySupport?: boolean
   date: Date | string
   note?: string | null
   createdAt?: Date | string
@@ -924,6 +950,7 @@ export type TransactionUncheckedCreateWithoutDestinationAccountInput = {
   type: $Enums.TransactionType
   amount: number
   feeAmount?: number
+  isFamilySupport?: boolean
   date: Date | string
   note?: string | null
   createdAt?: Date | string
@@ -949,6 +976,7 @@ export type TransactionCreateWithoutSourceAccountInput = {
   type: $Enums.TransactionType
   amount: number
   feeAmount?: number
+  isFamilySupport?: boolean
   date: Date | string
   note?: string | null
   createdAt?: Date | string
@@ -965,6 +993,7 @@ export type TransactionUncheckedCreateWithoutSourceAccountInput = {
   type: $Enums.TransactionType
   amount: number
   feeAmount?: number
+  isFamilySupport?: boolean
   date: Date | string
   note?: string | null
   createdAt?: Date | string
@@ -1022,6 +1051,7 @@ export type TransactionCreateWithoutCategoryInput = {
   type: $Enums.TransactionType
   amount: number
   feeAmount?: number
+  isFamilySupport?: boolean
   date: Date | string
   note?: string | null
   createdAt?: Date | string
@@ -1038,6 +1068,7 @@ export type TransactionUncheckedCreateWithoutCategoryInput = {
   type: $Enums.TransactionType
   amount: number
   feeAmount?: number
+  isFamilySupport?: boolean
   date: Date | string
   note?: string | null
   createdAt?: Date | string
@@ -1079,6 +1110,7 @@ export type TransactionCreateWithoutLoanInput = {
   type: $Enums.TransactionType
   amount: number
   feeAmount?: number
+  isFamilySupport?: boolean
   date: Date | string
   note?: string | null
   createdAt?: Date | string
@@ -1095,6 +1127,7 @@ export type TransactionUncheckedCreateWithoutLoanInput = {
   type: $Enums.TransactionType
   amount: number
   feeAmount?: number
+  isFamilySupport?: boolean
   date: Date | string
   note?: string | null
   createdAt?: Date | string
@@ -1136,6 +1169,7 @@ export type TransactionCreateWithoutRepaymentInput = {
   type: $Enums.TransactionType
   amount: number
   feeAmount?: number
+  isFamilySupport?: boolean
   date: Date | string
   note?: string | null
   createdAt?: Date | string
@@ -1152,6 +1186,7 @@ export type TransactionUncheckedCreateWithoutRepaymentInput = {
   type: $Enums.TransactionType
   amount: number
   feeAmount?: number
+  isFamilySupport?: boolean
   date: Date | string
   note?: string | null
   createdAt?: Date | string
@@ -1184,6 +1219,7 @@ export type TransactionUpdateWithoutRepaymentInput = {
   type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   feeAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  isFamilySupport?: Prisma.BoolFieldUpdateOperationsInput | boolean
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1200,6 +1236,7 @@ export type TransactionUncheckedUpdateWithoutRepaymentInput = {
   type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   feeAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  isFamilySupport?: Prisma.BoolFieldUpdateOperationsInput | boolean
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1216,6 +1253,7 @@ export type TransactionCreateManyUserInput = {
   type: $Enums.TransactionType
   amount: number
   feeAmount?: number
+  isFamilySupport?: boolean
   date: Date | string
   note?: string | null
   createdAt?: Date | string
@@ -1232,6 +1270,7 @@ export type TransactionUpdateWithoutUserInput = {
   type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   feeAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  isFamilySupport?: Prisma.BoolFieldUpdateOperationsInput | boolean
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1248,6 +1287,7 @@ export type TransactionUncheckedUpdateWithoutUserInput = {
   type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   feeAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  isFamilySupport?: Prisma.BoolFieldUpdateOperationsInput | boolean
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1264,6 +1304,7 @@ export type TransactionUncheckedUpdateManyWithoutUserInput = {
   type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   feeAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  isFamilySupport?: Prisma.BoolFieldUpdateOperationsInput | boolean
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1280,6 +1321,7 @@ export type TransactionCreateManyDestinationAccountInput = {
   type: $Enums.TransactionType
   amount: number
   feeAmount?: number
+  isFamilySupport?: boolean
   date: Date | string
   note?: string | null
   createdAt?: Date | string
@@ -1296,6 +1338,7 @@ export type TransactionCreateManySourceAccountInput = {
   type: $Enums.TransactionType
   amount: number
   feeAmount?: number
+  isFamilySupport?: boolean
   date: Date | string
   note?: string | null
   createdAt?: Date | string
@@ -1312,6 +1355,7 @@ export type TransactionUpdateWithoutDestinationAccountInput = {
   type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   feeAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  isFamilySupport?: Prisma.BoolFieldUpdateOperationsInput | boolean
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1328,6 +1372,7 @@ export type TransactionUncheckedUpdateWithoutDestinationAccountInput = {
   type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   feeAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  isFamilySupport?: Prisma.BoolFieldUpdateOperationsInput | boolean
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1344,6 +1389,7 @@ export type TransactionUncheckedUpdateManyWithoutDestinationAccountInput = {
   type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   feeAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  isFamilySupport?: Prisma.BoolFieldUpdateOperationsInput | boolean
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1360,6 +1406,7 @@ export type TransactionUpdateWithoutSourceAccountInput = {
   type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   feeAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  isFamilySupport?: Prisma.BoolFieldUpdateOperationsInput | boolean
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1376,6 +1423,7 @@ export type TransactionUncheckedUpdateWithoutSourceAccountInput = {
   type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   feeAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  isFamilySupport?: Prisma.BoolFieldUpdateOperationsInput | boolean
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1392,6 +1440,7 @@ export type TransactionUncheckedUpdateManyWithoutSourceAccountInput = {
   type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   feeAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  isFamilySupport?: Prisma.BoolFieldUpdateOperationsInput | boolean
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1408,6 +1457,7 @@ export type TransactionCreateManyCategoryInput = {
   type: $Enums.TransactionType
   amount: number
   feeAmount?: number
+  isFamilySupport?: boolean
   date: Date | string
   note?: string | null
   createdAt?: Date | string
@@ -1424,6 +1474,7 @@ export type TransactionUpdateWithoutCategoryInput = {
   type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   feeAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  isFamilySupport?: Prisma.BoolFieldUpdateOperationsInput | boolean
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1440,6 +1491,7 @@ export type TransactionUncheckedUpdateWithoutCategoryInput = {
   type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   feeAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  isFamilySupport?: Prisma.BoolFieldUpdateOperationsInput | boolean
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1456,6 +1508,7 @@ export type TransactionUncheckedUpdateManyWithoutCategoryInput = {
   type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   feeAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  isFamilySupport?: Prisma.BoolFieldUpdateOperationsInput | boolean
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1472,6 +1525,7 @@ export type TransactionCreateManyLoanInput = {
   type: $Enums.TransactionType
   amount: number
   feeAmount?: number
+  isFamilySupport?: boolean
   date: Date | string
   note?: string | null
   createdAt?: Date | string
@@ -1488,6 +1542,7 @@ export type TransactionUpdateWithoutLoanInput = {
   type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   feeAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  isFamilySupport?: Prisma.BoolFieldUpdateOperationsInput | boolean
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1504,6 +1559,7 @@ export type TransactionUncheckedUpdateWithoutLoanInput = {
   type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   feeAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  isFamilySupport?: Prisma.BoolFieldUpdateOperationsInput | boolean
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1520,6 +1576,7 @@ export type TransactionUncheckedUpdateManyWithoutLoanInput = {
   type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   feeAmount?: Prisma.IntFieldUpdateOperationsInput | number
+  isFamilySupport?: Prisma.BoolFieldUpdateOperationsInput | boolean
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1538,6 +1595,7 @@ export type TransactionSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   type?: boolean
   amount?: boolean
   feeAmount?: boolean
+  isFamilySupport?: boolean
   date?: boolean
   note?: boolean
   createdAt?: boolean
@@ -1561,6 +1619,7 @@ export type TransactionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   type?: boolean
   amount?: boolean
   feeAmount?: boolean
+  isFamilySupport?: boolean
   date?: boolean
   note?: boolean
   createdAt?: boolean
@@ -1584,6 +1643,7 @@ export type TransactionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   type?: boolean
   amount?: boolean
   feeAmount?: boolean
+  isFamilySupport?: boolean
   date?: boolean
   note?: boolean
   createdAt?: boolean
@@ -1607,6 +1667,7 @@ export type TransactionSelectScalar = {
   type?: boolean
   amount?: boolean
   feeAmount?: boolean
+  isFamilySupport?: boolean
   date?: boolean
   note?: boolean
   createdAt?: boolean
@@ -1619,7 +1680,7 @@ export type TransactionSelectScalar = {
   repaymentId?: boolean
 }
 
-export type TransactionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "type" | "amount" | "feeAmount" | "date" | "note" | "createdAt" | "updatedAt" | "userId" | "categoryId" | "sourceAccountId" | "destinationAccountId" | "loanId" | "repaymentId", ExtArgs["result"]["transaction"]>
+export type TransactionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "type" | "amount" | "feeAmount" | "isFamilySupport" | "date" | "note" | "createdAt" | "updatedAt" | "userId" | "categoryId" | "sourceAccountId" | "destinationAccountId" | "loanId" | "repaymentId", ExtArgs["result"]["transaction"]>
 export type TransactionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.Transaction$categoryArgs<ExtArgs>
   destinationAccount?: boolean | Prisma.Transaction$destinationAccountArgs<ExtArgs>
@@ -1660,6 +1721,7 @@ export type $TransactionPayload<ExtArgs extends runtime.Types.Extensions.Interna
     type: $Enums.TransactionType
     amount: number
     feeAmount: number
+    isFamilySupport: boolean
     date: Date
     note: string | null
     createdAt: Date
@@ -2103,6 +2165,7 @@ export interface TransactionFieldRefs {
   readonly type: Prisma.FieldRef<"Transaction", 'TransactionType'>
   readonly amount: Prisma.FieldRef<"Transaction", 'Int'>
   readonly feeAmount: Prisma.FieldRef<"Transaction", 'Int'>
+  readonly isFamilySupport: Prisma.FieldRef<"Transaction", 'Boolean'>
   readonly date: Prisma.FieldRef<"Transaction", 'DateTime'>
   readonly note: Prisma.FieldRef<"Transaction", 'String'>
   readonly createdAt: Prisma.FieldRef<"Transaction", 'DateTime'>

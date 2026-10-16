@@ -8,13 +8,13 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { EmptyState } from "@/components/ui/empty-state"
-import { Input } from "@/components/ui/input"
+import { MonthPicker, toMonthKey } from "@/components/ui/month-picker"
 import { Skeleton } from "@/components/ui/skeleton"
 import { getReport } from "@/features/reports/api"
 import { reportsQueryKey, type ReportData } from "@/features/reports/types"
 import { formatMoney } from "@/lib/money/currency"
 
-const currentMonth = new Date().toISOString().slice(0, 7)
+const currentMonth = toMonthKey(new Date())
 
 export function ReportsScreen() {
   const [month, setMonth] = useState(currentMonth)
@@ -32,14 +32,31 @@ function Report({ data, month, onMonthChange }: { data: ReportData; month: strin
   const expenseChange = percentChange(data.expense, data.previousExpense)
 
   return <div className="grid gap-6">
-    <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end"><div className="min-w-0"><h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Reports</h1><p className="mt-1 text-sm text-muted-foreground">See where your money came from and where it went.</p></div><Input className="w-full sm:w-44" type="month" value={month} onChange={(event) => onMonthChange(event.target.value)} /></div>
+    <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end"><div className="min-w-0"><h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Reports</h1><p className="mt-1 text-sm text-muted-foreground">See where your money came from and where it went.</p></div><MonthPicker className="w-full sm:w-52" value={month} onChange={onMonthChange} /></div>
     <div className="grid gap-3 sm:grid-cols-3"><Summary label="Income" amount={data.income} change={incomeChange} icon={ArrowDownLeft} positive /><Summary label="Expense" amount={data.expense} change={expenseChange} icon={ArrowUpRight} /><Summary label="Net cash flow" amount={data.netCashFlow} icon={data.netCashFlow >= 0 ? TrendingUp : TrendingDown} positive={data.netCashFlow >= 0} /></div>
     <Card><CardHeader><CardTitle>Income vs expense</CardTitle></CardHeader><CardContent className="grid gap-5"><FlowBar label="Income" amount={data.income} max={maxFlow} className="bg-primary" /><FlowBar label="Expense" amount={data.expense} max={maxFlow} className="bg-destructive" /></CardContent></Card>
     <DailySpending data={data} />
     <div className="grid gap-6 lg:grid-cols-2"><Breakdown title="Expense by category" items={data.categoryExpenses} total={data.expense} empty="No expenses this month." /><Breakdown title="Income sources" items={data.incomeSources} total={data.income} empty="No income this month." /></div>
-    <div className="grid gap-3 sm:grid-cols-3"><Card><CardContent className="p-5"><p className="text-sm text-muted-foreground">Family support received</p><p className="mt-2 text-2xl font-semibold break-words tabular-nums">{formatMoney(data.familySupport)}</p></CardContent></Card><Card><CardContent className="p-5"><p className="text-sm text-muted-foreground">Total receivable</p><p className="mt-2 text-2xl font-semibold break-words tabular-nums text-success-foreground">{formatMoney(data.loans.receivable)}</p></CardContent></Card><Card><CardContent className="p-5"><div className="flex items-center justify-between gap-2"><p className="min-w-0 truncate text-sm text-muted-foreground">Total payable</p>{data.loans.overdueCount > 0 && <Badge className="shrink-0" variant="destructive">{data.loans.overdueCount} overdue</Badge>}</div><p className="mt-2 text-2xl font-semibold break-words tabular-nums text-warning-foreground">{formatMoney(data.loans.payable)}</p></CardContent></Card></div>
+    <FamilySupport family={data.family} />
+    <div className="grid gap-3 sm:grid-cols-2"><Card><CardContent className="p-5"><p className="text-sm text-muted-foreground">Total receivable</p><p className="mt-2 text-2xl font-semibold break-words tabular-nums text-success-foreground">{formatMoney(data.loans.receivable)}</p></CardContent></Card><Card><CardContent className="p-5"><div className="flex items-center justify-between gap-2"><p className="min-w-0 truncate text-sm text-muted-foreground">Total payable</p>{data.loans.overdueCount > 0 && <Badge className="shrink-0" variant="destructive">{data.loans.overdueCount} overdue</Badge>}</div><p className="mt-2 text-2xl font-semibold break-words tabular-nums text-warning-foreground">{formatMoney(data.loans.payable)}</p></CardContent></Card></div>
     <div className="grid gap-6 lg:grid-cols-2"><Card><CardHeader><CardTitle>Account activity</CardTitle></CardHeader><CardContent>{data.accountActivity.length === 0 ? <p className="text-sm text-muted-foreground">No account activity this month.</p> : <div className="grid min-w-0 gap-4">{data.accountActivity.map((account) => <div key={account.name} className="min-w-0 border-b pb-3 last:border-0"><p className="truncate text-sm font-semibold">{account.name}</p><div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs tabular-nums text-muted-foreground"><span>In {formatMoney(account.income)}</span><span>Out {formatMoney(account.expense)}</span><span>Moved {formatMoney(account.transfers)}</span></div></div>)}</div>}</CardContent></Card><Card><CardHeader><CardTitle>Largest expenses</CardTitle></CardHeader><CardContent>{data.topExpenses.length === 0 ? <p className="text-sm text-muted-foreground">No expenses this month.</p> : <div className="grid min-w-0 gap-4">{data.topExpenses.map((expense) => <div key={expense.id} className="flex min-w-0 items-center justify-between gap-3"><div className="min-w-0 flex-1"><p className="truncate text-sm font-medium">{expense.categoryName}</p><p className="mt-0.5 truncate text-xs text-muted-foreground">{expense.accountName} · {new Intl.DateTimeFormat("en-BD", { day: "numeric", month: "short" }).format(new Date(expense.date))}</p></div><span className="shrink-0 text-sm font-semibold tabular-nums text-destructive">−{formatMoney(expense.amount)}</span></div>)}</div>}</CardContent></Card></div>
   </div>
+}
+
+function FamilySupport({ family }: { family: ReportData["family"] }) {
+  const date = (value: string) => new Intl.DateTimeFormat("en-BD", { day: "numeric", month: "short" }).format(new Date(value))
+  const hasAny = family.totalReceived > 0 || family.totalSpent > 0
+  return <Card><CardHeader className="gap-1"><CardTitle>Family support</CardTitle><CardDescription>Money sent from home. It is not counted in your income above.</CardDescription></CardHeader><CardContent className="grid gap-5">
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+      <DailyStat label="Received this month" value={formatMoney(family.receivedThisMonth)} hint={`${family.received.length} ${family.received.length === 1 ? "transfer" : "transfers"}`} />
+      <DailyStat label="Spent from it this month" value={formatMoney(family.spentThisMonth)} hint={family.receivedThisMonth ? `${Math.round(family.spentThisMonth / family.receivedThisMonth * 100)}% of this month's support` : "Paid from family money"} />
+      <DailyStat className="col-span-2 sm:col-span-1" label="Left in total" value={formatMoney(family.left)} hint={`${formatMoney(family.totalReceived)} received · ${formatMoney(family.totalSpent)} spent, all time`} />
+    </div>
+    {!hasAny ? <p className="text-sm text-muted-foreground">Tick “Family support” when you add income, or “Paid from family support” on an expense, and it will show up here.</p> : <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid min-w-0 content-start gap-3"><p className="text-sm font-medium">Received this month</p>{family.received.length === 0 ? <p className="text-sm text-muted-foreground">Nothing received this month.</p> : family.received.map((item) => <div key={item.id} className="flex min-w-0 items-center justify-between gap-3"><div className="min-w-0"><p className="truncate text-sm">{date(item.date)} · {item.accountName}</p>{item.note && <p className="truncate text-xs text-muted-foreground">{item.note}</p>}</div><span className="shrink-0 text-sm font-semibold tabular-nums text-success-foreground">+{formatMoney(item.amount)}</span></div>)}</div>
+      <div className="grid min-w-0 content-start gap-3"><p className="text-sm font-medium">Spent from it, by category</p>{family.spentByCategory.length === 0 ? <p className="text-sm text-muted-foreground">Nothing spent from it this month.</p> : family.spentByCategory.map((item) => <div key={item.name} className="min-w-0"><div className="flex justify-between gap-3 text-sm"><span className="min-w-0 truncate">{item.name}</span><strong className="shrink-0 tabular-nums">{formatMoney(item.amount)}</strong></div><div className="mt-2 h-2 overflow-hidden rounded-full bg-muted"><div className="h-full rounded-full bg-primary" style={{ width: `${family.spentThisMonth ? item.amount / family.spentThisMonth * 100 : 0}%` }} /></div></div>)}</div>
+    </div>}
+  </CardContent></Card>
 }
 
 function DailySpending({ data }: { data: ReportData }) {

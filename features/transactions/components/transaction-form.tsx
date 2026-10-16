@@ -16,9 +16,9 @@ import { refreshAppData } from "@/lib/query/refresh-app-data"
 const initialState: TransactionFormState = {}
 const today = new Date().toISOString().slice(0, 10)
 
-export function TransactionForm({ transaction, onSuccess }: { transaction?: TransactionSummary; onSuccess?: () => void }) {
+export function TransactionForm({ transaction, onSuccess, lockedType }: { transaction?: TransactionSummary; onSuccess?: () => void; lockedType?: CategoryType }) {
   const queryClient = useQueryClient()
-  const [type, setType] = useState<CategoryType>(transaction?.type === "INCOME" ? "INCOME" : "EXPENSE")
+  const [type, setType] = useState<CategoryType>(lockedType ?? (transaction?.type === "INCOME" ? "INCOME" : "EXPENSE"))
   const [state, formAction, pending] = useActionState(transaction ? updateTransactionAction : createTransactionAction, initialState)
   const accountsQuery = useQuery({ queryKey: accountsQueryKey, queryFn: getAccounts })
   const categoriesQuery = useQuery({ queryKey: categoriesQueryKey, queryFn: getCategories })
@@ -44,13 +44,14 @@ export function TransactionForm({ transaction, onSuccess }: { transaction?: Tran
     <form action={formAction} className="grid gap-5">
       {transaction && <input type="hidden" name="transactionId" value={transaction.id} />}
       <input type="hidden" name="type" value={type} />
-      <div className="grid grid-cols-2 rounded-lg bg-muted p-1">
+      {!lockedType && <div className="grid grid-cols-2 rounded-lg bg-muted p-1">
         <button type="button" onClick={() => setType("EXPENSE")} className={`flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${type === "EXPENSE" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"}`}><ArrowUpRight className="size-4 text-destructive" /> Expense</button>
         <button type="button" onClick={() => setType("INCOME")} className={`flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${type === "INCOME" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"}`}><ArrowDownLeft className="size-4 text-primary" /> Income</button>
-      </div>
+      </div>}
       <div className="grid gap-2"><label htmlFor="transaction-amount" className="text-sm font-medium">Amount</label><Input id="transaction-amount" name="amount" type="text" inputMode="decimal" defaultValue={transaction ? String(transaction.amount / 100) : undefined} placeholder="0.00" autoFocus required /></div>
       <div className="grid gap-4 xl:grid-cols-2"><label className="grid min-w-0 gap-2 text-sm font-medium">{type === "INCOME" ? "Deposit to" : "Pay from"}<select name="accountId" defaultValue={transaction?.account?.id ?? ""} className="h-10 w-full min-w-0 rounded-lg border bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/25" required><option value="">Select account</option>{accounts.map((account) => <option key={account.id} value={account.id}>{account.name}</option>)}</select></label><label className="grid min-w-0 gap-2 text-sm font-medium">Category<select name="categoryId" defaultValue={transaction?.category?.id ?? ""} className="h-10 w-full min-w-0 rounded-lg border bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/25" required><option value="">Select category</option>{categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}</select></label></div>
       <div className="grid gap-4 xl:grid-cols-2"><label className="grid min-w-0 gap-2 text-sm font-medium">Date<Input name="date" type="date" defaultValue={transaction ? transaction.date.slice(0, 10) : today} required /></label><label className="grid min-w-0 gap-2 text-sm font-medium"><span className="flex flex-wrap items-baseline gap-1">Note <span className="whitespace-nowrap font-normal text-muted-foreground">(optional)</span></span><Input name="note" type="text" defaultValue={transaction?.note ?? ""} placeholder="Add a short note" maxLength={300} /></label></div>
+      <label className="flex items-start gap-3 rounded-lg border bg-muted/30 p-3 text-sm"><input key={type} name="isFamilySupport" type="checkbox" defaultChecked={transaction?.isFamilySupport ?? false} className="mt-0.5 size-4 shrink-0 accent-[var(--primary)]" /><span className="min-w-0"><strong className="font-medium">{type === "INCOME" ? "Family support" : "Paid from family support"}</strong><span className="mt-0.5 block text-xs leading-5 text-muted-foreground">{type === "INCOME" ? "Money sent from home. It is added to the account but not counted as your income, and is tracked in its own report." : "Take this expense out of the family support money, so you can see how much of it is left."}</span></span></label>
       {state.error && <p role="alert" className="rounded-lg border border-destructive/20 bg-destructive/10 px-3 py-2.5 text-sm text-destructive">{state.error}</p>}
       {state.success && !onSuccess && <p role="status" className="rounded-lg border border-success-foreground/15 bg-success px-3 py-2.5 text-sm text-success-foreground">Transaction saved. Your account balance has been updated.</p>}
       <Button type="submit" size="lg" disabled={pending || accounts.length === 0 || categories.length === 0}><Plus className="size-4" /> {pending ? "Saving…" : transaction ? "Save changes" : `Add ${type === "INCOME" ? "income" : "expense"}`}</Button>

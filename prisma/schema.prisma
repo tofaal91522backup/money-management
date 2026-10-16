@@ -151,6 +151,8 @@ model Transaction {
   type                 TransactionType
   amount               Int
   feeAmount            Int             @default(0)
+  // Income: money sent from home. Expense: paid out of that money. Kept out of "my income" totals.
+  isFamilySupport      Boolean         @default(false)
   date                 DateTime
   note                 String?
   createdAt            DateTime        @default(now())

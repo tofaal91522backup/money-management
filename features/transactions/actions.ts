@@ -22,11 +22,12 @@ function getTransactionInput(formData: FormData) {
   const categoryId = String(formData.get("categoryId") ?? "")
   const date = parseTransactionDate(String(formData.get("date") ?? ""))
   const note = String(formData.get("note") ?? "").trim()
+  const isFamilySupport = formData.get("isFamilySupport") === "on"
   if (type !== "INCOME" && type !== "EXPENSE") return { error: "Choose income or expense." } as const
   if (amount === null || amount <= 0) return { error: "Enter an amount greater than zero." } as const
   if (!accountId || !categoryId || !date) return { error: "Choose an account, category, and valid date." } as const
   if (note.length > 300) return { error: "A note can be up to 300 characters." } as const
-  return { data: { type, amount, accountId, categoryId, date, note } } as const
+  return { data: { type, amount, accountId, categoryId, date, note, isFamilySupport } } as const
 }
 
 async function validateReferences(userId: string, input: { type: "INCOME" | "EXPENSE"; accountId: string; categoryId: string }) {
@@ -53,7 +54,7 @@ export async function createTransactionAction(_: TransactionFormState, formData:
   if (!account) return { error: "Choose an active account." }
   if (!category) return { error: "Choose a matching active category." }
   if (parsed.data.type === "EXPENSE" && !(await canPayExpense(user.id, account.id, parsed.data.amount))) return { error: "This expense is larger than the available account balance." }
-  await prisma.transaction.create({ data: { type: parsed.data.type, amount: parsed.data.amount, date: parsed.data.date, note: parsed.data.note || null, categoryId: category.id, userId: user.id, ...(parsed.data.type === "INCOME" ? { destinationAccountId: account.id } : { sourceAccountId: account.id }) } })
+  await prisma.transaction.create({ data: { type: parsed.data.type, amount: parsed.data.amount, date: parsed.data.date, note: parsed.data.note || null, isFamilySupport: parsed.data.isFamilySupport, categoryId: category.id, userId: user.id, ...(parsed.data.type === "INCOME" ? { destinationAccountId: account.id } : { sourceAccountId: account.id }) } })
   refreshTransactionPages(); return { success: true }
 }
 
@@ -68,7 +69,7 @@ export async function updateTransactionAction(_: TransactionFormState, formData:
   if (!category) return { error: "Choose a matching active category." }
   const previousExpense = existing.type === "EXPENSE" ? existing : undefined
   if (parsed.data.type === "EXPENSE" && !(await canPayExpense(user.id, account.id, parsed.data.amount, previousExpense))) return { error: "This expense is larger than the available account balance." }
-  await prisma.transaction.update({ where: { id: existing.id }, data: { type: parsed.data.type, amount: parsed.data.amount, date: parsed.data.date, note: parsed.data.note || null, categoryId: category.id, sourceAccountId: parsed.data.type === "EXPENSE" ? account.id : null, destinationAccountId: parsed.data.type === "INCOME" ? account.id : null } })
+  await prisma.transaction.update({ where: { id: existing.id }, data: { type: parsed.data.type, amount: parsed.data.amount, date: parsed.data.date, note: parsed.data.note || null, isFamilySupport: parsed.data.isFamilySupport, categoryId: category.id, sourceAccountId: parsed.data.type === "EXPENSE" ? account.id : null, destinationAccountId: parsed.data.type === "INCOME" ? account.id : null } })
   refreshTransactionPages(); return { success: true }
 }
 
