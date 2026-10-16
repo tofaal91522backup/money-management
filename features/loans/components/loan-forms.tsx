@@ -29,7 +29,7 @@ export function PersonForm({ person, onSuccess }: { person?: LoanPersonSummary; 
     }
   }, [onSuccess, queryClient, state])
 
-  return <form action={formAction} className="grid gap-4">
+  return <form action={formAction} className="grid grid-cols-[minmax(0,1fr)] gap-4">
     {person && <input type="hidden" name="personId" value={person.id} />}
     <label className="grid min-w-0 gap-2 text-sm font-medium">Name<Input name="name" defaultValue={person?.name} required maxLength={60} placeholder="Who is this?" /></label>
     <label className="grid min-w-0 gap-2 text-sm font-medium"><span className="flex flex-wrap items-baseline gap-1">Phone <span className={optionalLabel}>(optional)</span></span><Input name="contact" defaultValue={person?.contact ?? ""} maxLength={80} /></label>
@@ -50,7 +50,7 @@ export function DeletePersonForm({ person, onCancel, onSuccess }: { person: Loan
     }
   }, [onSuccess, queryClient, state])
 
-  return <form action={formAction} className="grid gap-4">
+  return <form action={formAction} className="grid grid-cols-[minmax(0,1fr)] gap-4">
     <input type="hidden" name="personId" value={person.id} />
     {state.error && <p role="alert" className="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">{state.error}</p>}
     <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
@@ -87,7 +87,7 @@ export function LoanForm({ loan, personId, onSuccess }: { loan?: LoanSummary; pe
     }
   }, [onSuccess, queryClient, state])
 
-  return <form action={formAction} className="grid gap-4">
+  return <form action={formAction} className="grid grid-cols-[minmax(0,1fr)] gap-4">
     {loan && <input type="hidden" name="loanId" value={loan.id} />}
     <input type="hidden" name="type" value={type} />
     <input type="hidden" name="personId" value={person === newPersonChoice ? "" : person} />
@@ -113,13 +113,13 @@ export function LoanForm({ loan, personId, onSuccess }: { loan?: LoanSummary; pe
       <span className="min-w-0"><strong className="font-medium">This is an old loan</strong><span className="mt-0.5 block text-xs leading-5 text-muted-foreground">Record an existing {type === "RECEIVABLE" ? "receivable" : "payable"} without changing the selected account&apos;s current balance.</span></span>
     </label>}
 
-    <div className="grid gap-4 sm:grid-cols-2">
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-4 sm:grid-cols-2">
       <label className="grid min-w-0 gap-2 text-sm font-medium">Amount<Input name="amount" type="text" inputMode="decimal" value={amountInput} onChange={(event) => setAmountInput(event.target.value)} required placeholder="0.00" /></label>
       <label className="grid min-w-0 gap-2 text-sm font-medium">{isOpeningLoan ? "Reference account" : type === "RECEIVABLE" ? "Lent from" : "Received in"}<select name="accountId" value={accountId} onChange={(event) => setAccountId(event.target.value)} required className="h-10 w-full min-w-0 rounded-lg border bg-background px-3 text-sm"><option value="">Select account</option>{activeAccounts.map((account) => <option key={account.id} value={account.id}>{account.name}</option>)}</select></label>
     </div>
-    <div className="grid gap-4 sm:grid-cols-2">
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-4 sm:grid-cols-2">
       <label className="grid min-w-0 gap-2 text-sm font-medium">Loan date<Input name="startDate" type="date" defaultValue={loan?.startDate.slice(0, 10) ?? today} required /></label>
-      <label className="grid min-w-0 gap-2 text-sm font-medium"><span className="flex flex-wrap items-baseline gap-1">Due date <span className={optionalLabel}>(optional)</span></span><Input name="dueDate" type="date" defaultValue={loan?.dueDate?.slice(0, 10) ?? ""} /></label>
+      <label className="grid min-w-0 gap-2 text-sm font-medium"><span className="flex flex-wrap items-baseline gap-1">Due date <span className={optionalLabel}>(optional)</span></span><Input className="min-w-0" name="dueDate" type="date" defaultValue={loan?.dueDate?.slice(0, 10) ?? ""} /></label>
     </div>
     <label className="grid min-w-0 gap-2 text-sm font-medium"><span className="flex flex-wrap items-baseline gap-1">Note <span className={optionalLabel}>(optional)</span></span><Input name="note" defaultValue={loan?.note ?? ""} maxLength={300} /></label>
 
@@ -162,7 +162,7 @@ export function RepaymentForm({ loan, onSuccess }: { loan: LoanSummary; onSucces
     }
   }, [onSuccess, queryClient, state])
 
-  return <form action={formAction} className="grid gap-4">
+  return <form action={formAction} className="grid grid-cols-[minmax(0,1fr)] gap-4">
     <input type="hidden" name="loanId" value={loan.id} />
     <p className="rounded-lg bg-muted px-3 py-2 text-sm break-words">Remaining: <strong className="tabular-nums">{(loan.remainingAmount / 100).toFixed(2)}</strong></p>
     <label className="grid min-w-0 gap-2 text-sm font-medium">Amount<Input name="amount" type="text" inputMode="decimal" value={amountInput} onChange={(event) => setAmountInput(event.target.value)} required placeholder="0.00" /></label>

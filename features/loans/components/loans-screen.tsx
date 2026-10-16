@@ -12,6 +12,7 @@ import { EmptyState } from "@/components/ui/empty-state"
 import { deleteLoanAction } from "@/features/loans/actions"
 import { getLoanPeople, getLoans } from "@/features/loans/api"
 import { DeletePersonForm, LoanForm, PersonForm, RepaymentForm } from "@/features/loans/components/loan-forms"
+import { LoanActivity } from "@/features/loans/components/loan-activity"
 import { LoanOverview, LoanPeopleChart, LoanProgress } from "@/features/loans/components/loan-visuals"
 import { loanPeopleQueryKey, loansQueryKey, type LoanPersonSummary, type LoanSummary, type LoanType } from "@/features/loans/types"
 import { formatMoney } from "@/lib/money/currency"
@@ -56,7 +57,7 @@ export function LoansScreen() {
     setDeleting(null)
   }
 
-  return <div className="grid gap-6">
+  return <div className="grid grid-cols-[minmax(0,1fr)] gap-6">
     <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
       <div className="min-w-0"><h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Loans</h1><p className="mt-1 text-sm text-muted-foreground">Track money you will receive and money you need to repay.</p></div>
       <div className="flex flex-col gap-2 sm:flex-row">
@@ -72,6 +73,8 @@ export function LoansScreen() {
 
     <LoanOverview loans={entriesOfType} type={type} peopleCount={groups.filter((group) => group.remaining > 0).length} />
     {!isPending && !isError && <LoanPeopleChart type={type} rows={groups.map((group) => ({ id: group.person.id, name: group.person.name, remaining: group.remaining }))} />}
+
+    {!isPending && !isError && <LoanActivity key={type} loans={entriesOfType} type={type} />}
 
     {isPending && <p className="text-sm text-muted-foreground">Loading loans…</p>}
     {isError && <EmptyState icon={HandCoins} title="Could not load loans" description="Please try again." action={<Button onClick={() => refetch()}>Try again</Button>} />}
@@ -120,20 +123,19 @@ function PersonCard({ group, type, open, onToggle, onAddLoan, onEditPerson, onDe
   const repaid = entries.reduce((sum, entry) => sum + entry.repaidAmount, 0)
 
   return <Card><CardContent className="p-0">
-    <button type="button" onClick={onToggle} aria-expanded={open} className="flex w-full items-start justify-between gap-3 p-5 text-left">
+    <button type="button" onClick={onToggle} aria-expanded={open} className="flex w-full min-w-0 items-start justify-between gap-3 p-4 text-left sm:p-5">
       <div className="min-w-0 flex-1">
         <p className="truncate font-semibold">{person.name}</p>
         <p className="mt-1 truncate text-xs text-muted-foreground">{entries.length === 0 ? "No entries yet" : `${entries.length} ${entries.length === 1 ? "entry" : "entries"}`}{person.contact ? ` · ${person.contact}` : ""}</p>
         {original > 0 && <LoanProgress className="mt-3 max-w-xs" repaid={repaid} original={original} type={type} />}
       </div>
-      <div className="flex shrink-0 items-center gap-3">
-        <div className="text-right"><p className="text-xs text-muted-foreground">{type === "RECEIVABLE" ? "To receive" : "To repay"}</p><p className="mt-1 font-semibold break-words tabular-nums">{formatMoney(remaining)}</p></div>
-        {overdue && <Badge variant="destructive">OVERDUE</Badge>}
+      <div className="flex max-w-[55%] shrink-0 items-center gap-2 sm:max-w-none sm:gap-3">
+        <div className="flex min-w-0 flex-col items-end gap-1.5 sm:flex-row sm:items-center sm:gap-3"><div className="min-w-0 text-right"><p className="text-xs text-muted-foreground">{type === "RECEIVABLE" ? "To receive" : "To repay"}</p><p className="mt-1 font-semibold break-words tabular-nums">{formatMoney(remaining)}</p></div>{overdue && <Badge variant="destructive">OVERDUE</Badge>}</div>
         <ChevronDown className={`size-4 shrink-0 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`} />
       </div>
     </button>
 
-    {open && <div className="grid gap-3 border-t p-5">
+    {open && <div className="grid gap-3 border-t p-4 sm:p-5">
       {person.note && <p className="text-xs break-words text-muted-foreground">{person.note}</p>}
       {entries.length === 0 && <p className="text-sm text-muted-foreground">Nothing here yet. Add the first entry for {person.name}.</p>}
       {entries.map((entry) => <LoanEntry key={entry.id} loan={entry} onRepay={() => onRepay(entry)} onEdit={() => onEdit(entry)} onDelete={() => onDelete(entry)} />)}
@@ -156,7 +158,7 @@ function LoanEntry({ loan, onRepay, onEdit, onDelete }: { loan: LoanSummary; onR
       <Badge className="shrink-0" variant={statusVariant}>{loan.status.replaceAll("_", " ")}</Badge>
     </div>
 
-    <div className="mt-4 grid grid-cols-3 gap-3 text-sm">
+    <div className="mt-4 grid grid-cols-1 gap-3 text-sm min-[420px]:grid-cols-3">
       <div className="min-w-0"><p className="text-xs text-muted-foreground">Original</p><p className="mt-1 font-semibold break-words tabular-nums">{formatMoney(loan.originalAmount)}</p></div>
       <div className="min-w-0"><p className="text-xs text-muted-foreground">Repaid</p><p className="mt-1 font-semibold break-words tabular-nums">{formatMoney(loan.repaidAmount)}</p></div>
       <div className="min-w-0"><p className="text-xs text-muted-foreground">Remaining</p><p className="mt-1 font-semibold break-words tabular-nums">{formatMoney(loan.remainingAmount)}</p></div>

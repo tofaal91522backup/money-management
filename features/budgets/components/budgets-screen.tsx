@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { EmptyState } from "@/components/ui/empty-state"
 import { Input } from "@/components/ui/input"
+import { MonthPicker, toMonthKey } from "@/components/ui/month-picker"
 import { createBudgetAction, deleteBudgetAction, updateBudgetAction } from "@/features/budgets/actions"
 import { getBudgets } from "@/features/budgets/api"
 import { budgetsQueryKey, type BudgetFormState, type BudgetSummary } from "@/features/budgets/types"
@@ -17,7 +18,7 @@ import { formatMoney } from "@/lib/money/currency"
 import { refreshAppData } from "@/lib/query/refresh-app-data"
 
 const initialState: BudgetFormState = {}
-const currentMonth = new Date().toISOString().slice(0, 7)
+const currentMonth = toMonthKey(new Date())
 
 export function BudgetsScreen() {
   const queryClient = useQueryClient()
@@ -28,7 +29,7 @@ export function BudgetsScreen() {
   const deleteBudget = async (formData: FormData) => { await deleteBudgetAction(formData); await refreshAppData(queryClient) }
 
   return <div className="grid gap-6">
-    <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end"><div className="min-w-0"><h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Budgets</h1><p className="mt-1 text-sm text-muted-foreground">Set monthly limits before spending gets away from you.</p></div><div className="flex w-full gap-2 sm:w-auto"><Input className="min-w-0 flex-1 sm:w-44 sm:flex-none" type="month" value={month} onChange={(event) => setMonth(event.target.value)} /><Dialog open={createOpen} onOpenChange={setCreateOpen}><DialogTrigger asChild><Button className="shrink-0"><Plus className="size-4" /> Add budget</Button></DialogTrigger><DialogContent><DialogHeader><DialogTitle>Add budget</DialogTitle><DialogDescription>Set a total monthly limit or a limit for one expense category.</DialogDescription></DialogHeader><BudgetForm month={month} onSuccess={() => setCreateOpen(false)} /></DialogContent></Dialog></div></div>
+    <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end"><div className="min-w-0"><h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Budgets</h1><p className="mt-1 text-sm text-muted-foreground">Set monthly limits before spending gets away from you.</p></div><div className="flex w-full gap-2 sm:w-auto"><MonthPicker className="flex-1 sm:w-52 sm:flex-none" value={month} onChange={setMonth} /><Dialog open={createOpen} onOpenChange={setCreateOpen}><DialogTrigger asChild><Button className="shrink-0"><Plus className="size-4" /> Add budget</Button></DialogTrigger><DialogContent><DialogHeader><DialogTitle>Add budget</DialogTitle><DialogDescription>Set a total monthly limit or a limit for one expense category.</DialogDescription></DialogHeader><BudgetForm month={month} onSuccess={() => setCreateOpen(false)} /></DialogContent></Dialog></div></div>
     {query.isPending && <p className="text-sm text-muted-foreground">Loading budgets…</p>}
     {query.isError && <EmptyState title="Could not load budgets" description="Please try again." action={<Button onClick={() => query.refetch()}>Try again</Button>} />}
     {!query.isPending && !query.data?.length && <EmptyState title="No budgets for this month" description="Create a monthly limit for all spending or one category." action={<Button onClick={() => setCreateOpen(true)}><Plus className="size-4" /> Add budget</Button>} />}

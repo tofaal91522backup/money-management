@@ -1,6 +1,7 @@
 "use client"
 
-import { Archive, Building2, CircleDollarSign, Landmark, Pencil, Plus, WalletCards } from "lucide-react"
+import { Archive, Building2, CircleDollarSign, Landmark, ListOrdered, Pencil, Plus, WalletCards } from "lucide-react"
+import Link from "next/link"
 import { useState } from "react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 
@@ -95,7 +96,7 @@ function AccountCard({ account, onEdit, onToggleArchive }: { account: AccountSum
         </div>
         <p className="mt-6 text-2xl font-semibold tracking-tight break-words tabular-nums">{formatMoney(account.balance)}</p>
         <p className="mt-1 line-clamp-2 text-xs break-words text-muted-foreground">{account.identifier ?? "No account note added"}</p>
-        <div className="mt-5 flex flex-wrap items-center gap-2 border-t pt-4"><Button variant="ghost" size="sm" onClick={onEdit}><Pencil className="size-3.5" /> Edit</Button><form action={onToggleArchive}><input type="hidden" name="accountId" value={account.id} /><input type="hidden" name="archive" value={String(!account.isArchived)} /><Button variant="ghost" size="sm" type="submit"><Archive className="size-3.5" /> {account.isArchived ? "Restore" : "Archive"}</Button></form></div>
+        <div className="mt-5 flex flex-wrap items-center gap-2 border-t pt-4"><Button asChild variant="outline" size="sm"><Link href={`/accounts/${account.id}`}><ListOrdered className="size-3.5" /> View</Link></Button><Button variant="ghost" size="sm" onClick={onEdit}><Pencil className="size-3.5" /> Edit</Button><form action={onToggleArchive}><input type="hidden" name="accountId" value={account.id} /><input type="hidden" name="archive" value={String(!account.isArchived)} /><Button variant="ghost" size="sm" type="submit"><Archive className="size-3.5" /> {account.isArchived ? "Restore" : "Archive"}</Button></form></div>
       </CardContent>
     </Card>
   )
