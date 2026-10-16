@@ -889,6 +889,7 @@ export type TransactionCreateOrConnectWithoutUserInput = {
 
 export type TransactionCreateManyUserInputEnvelope = {
   data: Prisma.TransactionCreateManyUserInput | Prisma.TransactionCreateManyUserInput[]
+  skipDuplicates?: boolean
 }
 
 export type TransactionUpsertWithWhereUniqueWithoutUserInput = {
@@ -969,6 +970,7 @@ export type TransactionCreateOrConnectWithoutDestinationAccountInput = {
 
 export type TransactionCreateManyDestinationAccountInputEnvelope = {
   data: Prisma.TransactionCreateManyDestinationAccountInput | Prisma.TransactionCreateManyDestinationAccountInput[]
+  skipDuplicates?: boolean
 }
 
 export type TransactionCreateWithoutSourceAccountInput = {
@@ -1012,6 +1014,7 @@ export type TransactionCreateOrConnectWithoutSourceAccountInput = {
 
 export type TransactionCreateManySourceAccountInputEnvelope = {
   data: Prisma.TransactionCreateManySourceAccountInput | Prisma.TransactionCreateManySourceAccountInput[]
+  skipDuplicates?: boolean
 }
 
 export type TransactionUpsertWithWhereUniqueWithoutDestinationAccountInput = {
@@ -1087,6 +1090,7 @@ export type TransactionCreateOrConnectWithoutCategoryInput = {
 
 export type TransactionCreateManyCategoryInputEnvelope = {
   data: Prisma.TransactionCreateManyCategoryInput | Prisma.TransactionCreateManyCategoryInput[]
+  skipDuplicates?: boolean
 }
 
 export type TransactionUpsertWithWhereUniqueWithoutCategoryInput = {
@@ -1146,6 +1150,7 @@ export type TransactionCreateOrConnectWithoutLoanInput = {
 
 export type TransactionCreateManyLoanInputEnvelope = {
   data: Prisma.TransactionCreateManyLoanInput | Prisma.TransactionCreateManyLoanInput[]
+  skipDuplicates?: boolean
 }
 
 export type TransactionUpsertWithWhereUniqueWithoutLoanInput = {
@@ -2410,6 +2415,7 @@ export type TransactionCreateManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * The data used to create many Transactions.
    */
   data: Prisma.TransactionCreateManyInput | Prisma.TransactionCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -2428,6 +2434,7 @@ export type TransactionCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Ext
    * The data used to create many Transactions.
    */
   data: Prisma.TransactionCreateManyInput | Prisma.TransactionCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

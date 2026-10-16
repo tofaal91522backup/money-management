@@ -1,7 +1,6 @@
 import "server-only"
 
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3"
-import { PrismaLibSql } from "@prisma/adapter-libsql"
+import { PrismaPg } from "@prisma/adapter-pg"
 
 import { PrismaClient } from "@/generated/prisma/client"
 
@@ -9,16 +8,13 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
 }
 
-const tursoUrl = process.env.TURSO_DATABASE_URL
-const tursoAuthToken = process.env.TURSO_AUTH_TOKEN
+const connectionString = process.env.DATABASE_URL
 
-if (tursoUrl && !tursoAuthToken) {
-  throw new Error("TURSO_AUTH_TOKEN is required when TURSO_DATABASE_URL is set.")
+if (!connectionString) {
+  throw new Error("DATABASE_URL is required.")
 }
 
-const adapter = tursoUrl
-  ? new PrismaLibSql({ url: tursoUrl, authToken: tursoAuthToken })
-  : new PrismaBetterSqlite3({ url: process.env.DATABASE_URL ?? "file:./prisma/dev.db" })
+const adapter = new PrismaPg({ connectionString })
 
 export const prisma = globalForPrisma.prisma ?? new PrismaClient({ adapter })
 

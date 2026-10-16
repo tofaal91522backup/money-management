@@ -638,6 +638,7 @@ export type LoanRepaymentCreateOrConnectWithoutUserInput = {
 
 export type LoanRepaymentCreateManyUserInputEnvelope = {
   data: Prisma.LoanRepaymentCreateManyUserInput | Prisma.LoanRepaymentCreateManyUserInput[]
+  skipDuplicates?: boolean
 }
 
 export type LoanRepaymentUpsertWithWhereUniqueWithoutUserInput = {
@@ -702,6 +703,7 @@ export type LoanRepaymentCreateOrConnectWithoutAccountInput = {
 
 export type LoanRepaymentCreateManyAccountInputEnvelope = {
   data: Prisma.LoanRepaymentCreateManyAccountInput | Prisma.LoanRepaymentCreateManyAccountInput[]
+  skipDuplicates?: boolean
 }
 
 export type LoanRepaymentUpsertWithWhereUniqueWithoutAccountInput = {
@@ -815,6 +817,7 @@ export type LoanRepaymentCreateOrConnectWithoutLoanInput = {
 
 export type LoanRepaymentCreateManyLoanInputEnvelope = {
   data: Prisma.LoanRepaymentCreateManyLoanInput | Prisma.LoanRepaymentCreateManyLoanInput[]
+  skipDuplicates?: boolean
 }
 
 export type LoanRepaymentUpsertWithWhereUniqueWithoutLoanInput = {
@@ -1737,6 +1740,7 @@ export type LoanRepaymentCreateManyArgs<ExtArgs extends runtime.Types.Extensions
    * The data used to create many LoanRepayments.
    */
   data: Prisma.LoanRepaymentCreateManyInput | Prisma.LoanRepaymentCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1755,6 +1759,7 @@ export type LoanRepaymentCreateManyAndReturnArgs<ExtArgs extends runtime.Types.E
    * The data used to create many LoanRepayments.
    */
   data: Prisma.LoanRepaymentCreateManyInput | Prisma.LoanRepaymentCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

@@ -583,6 +583,7 @@ export type UserSettingsCreateOrConnectWithoutDefaultAccountInput = {
 
 export type UserSettingsCreateManyDefaultAccountInputEnvelope = {
   data: Prisma.UserSettingsCreateManyDefaultAccountInput | Prisma.UserSettingsCreateManyDefaultAccountInput[]
+  skipDuplicates?: boolean
 }
 
 export type UserSettingsUpsertWithWhereUniqueWithoutDefaultAccountInput = {
@@ -1414,6 +1415,7 @@ export type UserSettingsCreateManyArgs<ExtArgs extends runtime.Types.Extensions.
    * The data used to create many UserSettings.
    */
   data: Prisma.UserSettingsCreateManyInput | Prisma.UserSettingsCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1432,6 +1434,7 @@ export type UserSettingsCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Ex
    * The data used to create many UserSettings.
    */
   data: Prisma.UserSettingsCreateManyInput | Prisma.UserSettingsCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */
